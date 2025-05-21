@@ -74,12 +74,12 @@
 
         </div>
     </div>
-    <div class="row">
+    {{-- <div class="row ">
         <div class="col-sm-12 text-center">
             <p>Don't have an account? <a href="{{ route('register') }}" class="text-primary m-l-5"><b>Sign Up</b></a></p>
 
         </div>
-    </div>
+    </div> --}}
 </div>
 
 @endsection

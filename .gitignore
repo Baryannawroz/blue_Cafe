@@ -12,3 +12,5 @@ yarn-error.log
 .env
 *.lock
 storage/logs/laravel.log
+storage/logs/laravel.log
+storage/framework/views
