@@ -67,4 +67,5 @@
     </footer>
 </body>
 
-</html><?php /**PATH D:\project\blueCafe\resources\views/layouts/app.blade.php ENDPATH**/ ?>
+</html>
+<?php /**PATH D:\project\blueCafe\resources\views/layouts/app.blade.php ENDPATH**/ ?>

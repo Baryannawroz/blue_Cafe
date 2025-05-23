@@ -92,6 +92,7 @@
                     <ul class="list-unstyled">
                         <li><a href="{{url('/add-dish')}}">Add Dish</a></li>
                         <li><a href="{{url('/all-dish')}}">All Dish</a></li>
+                        <li><a href="{{url('/all-dish-type')}}">Dish Categories</a></li>
                     </ul>
                 </li>
 

@@ -6,8 +6,8 @@ return [
     'hasInstall' => env('HAS_INSTALL',0),
 
     'currency' => [
-        'symbol' => env('RESTAURANT_CURRENCY_SYMBOL', '$'),
-        'currency' => env('RESTAURANT_CURRENCY_CURRENCY', 'USD')
+        'symbol' => env('RESTAURANT_CURRENCY_SYMBOL', ''),
+        'currency' => env('RESTAURANT_CURRENCY_CURRENCY', 'IQD')
     ],
 
     'vat' => [
