@@ -29,7 +29,7 @@
                         </span> <span class="menu-arrow"></span> </a>
                     <ul class="list-unstyled">
                         <li><a href="{{url('/live-kitchen')}}">Live Kitchen</a></li>
-                        {{--<li><a href="{{url('/kitchen-stat')}}">Kitchen Statistics</a></li>--}}
+                        <li><a href="{{url('/kitchen-stat')}}">Kitchen Statistics</a></li>
                     </ul>
                 </li> --}}
 
