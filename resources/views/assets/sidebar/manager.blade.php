@@ -24,14 +24,14 @@
                 </li>
 
 
-                <li class="has_sub d-none">
+                {{-- <li class="has_sub ">
                     <a href="javascript:void(0);" class="waves-effect"><i class="icon icon-fire"></i> <span> Kitchen
                         </span> <span class="menu-arrow"></span> </a>
                     <ul class="list-unstyled">
                         <li><a href="{{url('/live-kitchen')}}">Live Kitchen</a></li>
                         {{--<li><a href="{{url('/kitchen-stat')}}">Kitchen Statistics</a></li>--}}
                     </ul>
-                </li>
+                </li> --}}
 
                 <li class="has_sub">
                     <a href="javascript:void(0);" class="waves-effect"><i class="ti-notepad"></i> <span> Orders </span>
@@ -86,7 +86,7 @@
                     </ul>
                 </li>
 
-                <li class="has_sub d-none">
+                {{-- <li class="has_sub ">
                     <a href="javascript:void(0);" class="waves-effect"><i class="ti-package"></i><span> Stock Management
                         </span><span class="menu-arrow"></span></a>
                     <ul class="list-unstyled">
@@ -95,7 +95,7 @@
                         <li><a href="{{url('/add-item')}}">Add Item</a></li>
                         <li><a href="{{url('/all-item')}}">All Stock</a></li>
                     </ul>
-                </li>
+                </li> --}}
 
                 <li class="has_sub">
                     <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-cutlery"></i><span> Dish </span>
