@@ -16,3 +16,4 @@ storage/logs/laravel.log
 storage/framework/views
 storage
 uploads
+/storage/*.log
