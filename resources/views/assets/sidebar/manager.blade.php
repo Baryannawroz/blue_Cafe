@@ -24,14 +24,14 @@
                 </li>
 
 
-                {{-- <li class="has_sub ">
+                <li class="has_sub ">
                     <a href="javascript:void(0);" class="waves-effect"><i class="icon icon-fire"></i> <span> Kitchen
                         </span> <span class="menu-arrow"></span> </a>
                     <ul class="list-unstyled">
                         <li><a href="{{url('/live-kitchen')}}">Live Kitchen</a></li>
                         <li><a href="{{url('/kitchen-stat')}}">Kitchen Statistics</a></li>
                     </ul>
-                </li> --}}
+                </li>
 
                 <li class="has_sub">
                     <a href="javascript:void(0);" class="waves-effect"><i class="ti-notepad"></i> <span> Orders </span>
@@ -63,7 +63,7 @@
                             <a href="javascript:void(0);" class="waves-effect"><span>Expense</span> <span
                                     class="menu-arrow"></span></a>
                             <ul style="">
-                                {{--<li><a href="{{url('/new-purses')}}"><span>New Purses</span></a></li>--}}
+                                <li><a href="{{url('/new-purses')}}"><span>New Purses</span></a></li>
                                 <li><a href="{{url('/add-expense')}}"><span>Add Expense</span></a></li>
                                 <li><a href="{{url('/all-expanse')}}"><span>All Expense</span></a></li>
                             </ul>

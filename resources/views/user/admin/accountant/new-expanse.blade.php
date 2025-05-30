@@ -1,86 +1,108 @@
 @extends('layouts.app')
 
 @section('title')
-    New Expanse
+New Expense
 @endsection
 
 @section('content')
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="btn-group pull-right m-t-15">
-                <a href="{{url('/all-table')}}" class="btn btn-default waves-effect">All Expense <span class="m-l-5"></span></a>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="btn-group pull-right m-t-15">
+            <a href="{{ url('/all-table') }}" class="btn btn-default waves-effect">
+                All Expenses
+            </a>
+        </div>
+
+        <h4 class="page-title">New Expense</h4>
+        <ol class="breadcrumb">
+            <li><a href="{{ url('/') }}">Home</a></li>
+            <li><a href="#">Accounting</a></li>
+            <li class="active">Expense</li>
+            <li class="active">New Expense</li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="card-box">
+        <form class="form-horizontal" role="form" method="post" id="expenseForm" action="{{ url('/save-expense') }}"
+            data-parsley-validate novalidate>
+            {{ csrf_field() }}
+
+            <div class="form-group">
+                <label for="title" class="col-sm-3 control-label">Cause of Expense:</label>
+                <div class="col-sm-6">
+                    <input type="text" name="title" required class="form-control" id="title"
+                        placeholder="Cause of expense">
+                </div>
             </div>
 
-            <h4 class="page-title">New Expanse </h4>
-            <ol class="breadcrumb">
-                <li>
-                    <a href="{{url('/')}}">Home</a>
-                </li>
-                <li>
-                    <a href="#">Accounting</a>
-                </li>
-                <li class="active">
-                    Expanse
-                </li>
-                <li class="active">
-                    New Expanse
-                </li>
-            </ol>
-        </div>
-    </div>
-    <div class="row">
-        <div class="card-box">
+            <div class="form-group">
+                <label for="date" class="col-sm-3 control-label">Date of Expense:</label>
+                <div class="col-sm-6">
+                    <input type="date" name="date" required class="form-control" placeholder="mm/dd/yyyy"
+                        id="datepicker-autoclose">
+                </div>
+            </div>
 
-            <form class="form-horizontal" role="form" method="post" id="expanseForm" action="#" data-parsley-validate novalidate>
-               {{csrf_field()}}
-                <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-3 control-label">Cause Of Expanse :</label>
-                    <div class="col-sm-6">
-                        <input type="text" name="title" required class="form-control" id="inputEmail3" placeholder="Cause of expanse">
-                    </div>
+            <div class="form-group">
+                <label for="amount" class="col-sm-3 control-label">Expense Cost:</label>
+                <div class="col-sm-6">
+                    <input type="text" name="expense" required data-parsley-type="number" class="form-control"
+                        id="amount" placeholder="Cost">
                 </div>
-                <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-3 control-label">Date of Expanse :</label>
-                    <div class="col-sm-6">
-                        <input type="text" name="date" required class="form-control" placeholder="mm/dd/yyyy" id="datepicker-autoclose">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputPassword4" class="col-sm-3 control-label">Expanse Cost</label>
-                    <div class="col-sm-6">
-                        <input type="text" name="expanse" required  data-parsley-type="number" class="form-control" id="inputPassword4" placeholder="Cost ">
-                    </div>
-                </div>
+            </div>
 
-                <div class="form-group m-b-0">
-                    <div class="col-sm-offset-3 col-sm-9">
-                        <button type="submit" class="btn btn-success waves-effect waves-light">Save now</button>
-                    </div>
+            <div class="form-group m-b-0">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button type="submit" class="btn btn-success waves-effect waves-light">Save now</button>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
+</div>
 @endsection
 
 @section('extra-js')
-    <link rel="stylesheet" href="{{url('/dashboard/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
-    <script src="{{url('/dashboard/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
-    <script>
-        $(document).ready(function () {
-            $("#datepicker-autoclose").datepicker();
-
-            var expanseForm = $("#expanseForm");
-            expanseForm.on('submit', function (e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-                $(this).speedPost('/save-expanse', formData, message = {
-                    success: {header: 'New Expanse saved successfully', body: 'New Expanse saved successfully'},
-                    error: {header: 'Something went wrong', body: 'Something went wrong'},
-                    warning: {header: 'Internal Server Error', body: 'Internal server error'}
-                },expanseForm);
+<link rel="stylesheet" href="{{ url('/dashboard/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}">
+<script src="{{ url('/dashboard/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
+<script>
+    $(document).ready(function () {
+            // Initialize datepicker
+            $("#datepicker-autoclose").datepicker({
+                autoclose: true,
+                todayHighlight: true,
+                format: 'mm/dd/yyyy'
             });
 
+            // Set up CSRF for AJAX
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('input[name="_token"]').val()
+                }
+            });
 
-        })
-    </script>
+            // Handle form submission
+            var expenseForm = $("#expenseForm");
+            expenseForm.on('submit', function (e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+
+                $(this).speedPost('/save-expense', formData, message = {
+                    success: {
+                        header: 'New Expense Saved',
+                        body: 'The new expense was saved successfully.'
+                    },
+                    error: {
+                        header: 'Something Went Wrong',
+                        body: 'There was a problem saving the expense.'
+                    },
+                    warning: {
+                        header: 'Server Error',
+                        body: 'Internal server error.'
+                    }
+                }, expenseForm);
+            });
+        });
+</script>
 @endsection

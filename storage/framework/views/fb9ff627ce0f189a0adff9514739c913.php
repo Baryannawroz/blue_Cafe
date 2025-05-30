@@ -34,7 +34,7 @@
         </li>
         <li class="">
             <a href="<?php echo e(url('/dish-price/'.$dish->id)); ?>" aria-expanded="false">
-                <span class="visible-xs"><i class="fa fa-usd"></i></span>
+                <span class="visible-xs"><i class="fa ">IQD</i></span>
                 <span class="hidden-xs">Dish Price</span>
             </a>
         </li>

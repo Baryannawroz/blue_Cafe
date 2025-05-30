@@ -39,7 +39,7 @@ class AccountantController extends Controller
         $expanse = new OfficeExpanse();
         $expanse->title = $request->get('title');
         $expanse->date = Carbon::parse($request->get('date'))->format('Y-m-d');
-        $expanse->expanse = $request->get('expanse');
+        $expanse->expanse = $request->get('expense');
         $expanse->user_id = auth()->user()->id;
         if($expanse->save()){
             return response()->json('Ok',200);

@@ -111,6 +111,7 @@ class DishController extends Controller
         ]);
         $dish = new Dish();
         $dish->dish = $request->get('dish');
+        $dish->category_id = $request->get('category_id');
         if ($request->hasFile('thumbnail')) {
             $dish->thumbnail = $request->file('thumbnail')
                 ->move('uploads/dish/thumbnail',
@@ -137,6 +138,7 @@ class DishController extends Controller
 
         $dish = Dish::findOrFail($id);
         $dish->dish = $request->get('dish');
+        $dish->category_id = $request->get('category_id');
         if ($request->hasFile('thumbnail')) {
             $dish->thumbnail = $request->file('thumbnail')
                 ->move('uploads/dish/thumbnail',

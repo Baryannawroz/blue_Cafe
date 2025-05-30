@@ -34,7 +34,7 @@
         </li>
         <li class="disabled">
             <a href="javascript:void(0);" data-toggle="tab" aria-expanded="false">
-                <span class="visible-xs"><i class="fa fa-usd"></i></span>
+                <span class="visible-xs"><i class="">IQD</i></span>
                 <span class="hidden-xs">Dish Price</span>
             </a>
         </li>

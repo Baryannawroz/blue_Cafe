@@ -34,7 +34,7 @@
         </li>
         <li class="">
             <a href="<?php echo e(url('/dish-price/'.$dish->id)); ?>" aria-expanded="false">
-                <span class="visible-xs"><i class="fa fa-usd"></i></span>
+                <span class="visible-xs"><i class="">IQD</i></span>
                 <span class="hidden-xs">Dish Price</span>
             </a>
         </li>
@@ -186,4 +186,5 @@
     </script>
 
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\project\blueCafe\resources\views/user/admin/dish/dish-recipe/add-dish-recipe.blade.php ENDPATH**/ ?>
