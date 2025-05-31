@@ -99,7 +99,7 @@ const filteredProducts = computed(() => {
 
     // Filter by category if selected
     if (selectedCategoryId.value !== null) {
-        result = result.filter(product => product.category_id === selectedCategoryId.value);
+        result = result.filter(product => product.category_id == selectedCategoryId.value);
     }
 
     // Filter by search string if provided
