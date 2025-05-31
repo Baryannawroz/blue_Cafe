@@ -90,7 +90,7 @@ const clearSearch = () => {
 // Function to get category name by id
 const getCategoryName = (categoryId) => {
     if (!categoryId) return "";
-    const category = productCategories.value.find(cat => cat.id == categoryId);
+    const category = productCategories.value.find(categoryId);
     return category ? category.name : "";
 };
 
