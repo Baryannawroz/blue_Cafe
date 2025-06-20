@@ -37,7 +37,7 @@
                     <a href="javascript:void(0);" class="waves-effect"><i class="ti-notepad"></i> <span> Orders </span>
                         <span class="menu-arrow"></span> </a>
                     <ul class="list-unstyled">
-                        <li><a href="{{url('/new-order')}}">New Order</a></li>
+                        <li><a href="{{url('/order')}}">New Order</a></li>
                         <li><a href="{{url('/all-order')}}">All Order</a></li>
                         <li><a href="{{url('/non-paid-order')}}">Non paid Order</a></li>
                     </ul>

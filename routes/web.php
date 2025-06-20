@@ -215,8 +215,8 @@ Route::middleware('active.user')->group(function () {
     Route::middleware(['waiter'])->group(function () {
         //Dish
         Route::get('/dish-types/{dish_id}', [RecipeController::class, 'getTypesOfDish']);
-        // Orders
-        Route::get('/new-order', [OrderController::class, 'newOrder']);
+        Route::get('order', [OrderController::class, 'Order']);
+        Route::get('/new-order/{table_id}', [OrderController::class, 'newOrder']);
         Route::get('/print-order/{id}', [OrderController::class, 'printOrder']);
         Route::get('/marked-order/{id}', [OrderController::class, 'markOrder']);
         Route::get('/delete-order/{id}', [OrderController::class, 'deleteOrder']);

@@ -27,11 +27,21 @@ class OrderController extends Controller
      * Show authenticate waiter order
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function newOrder()
+    public function newOrder($table_id)
     {
         $tables = Table::all();
         $dishes = Dish::all();
         return view('user.waiter.order.add-order', [
+            'tables' => $tables,
+            'dishes' => $dishes,
+            'table_id' => $table_id
+        ]);
+    }
+    public function Order()
+    {
+        $tables = Table::all();
+        $dishes = Dish::all();
+        return view('user.waiter.order.order', [
             'tables' => $tables,
             'dishes' => $dishes
         ]);
@@ -81,7 +91,6 @@ class OrderController extends Controller
 
             $lastOrder = Order::latest('id')->first();
             $orderNo = $lastOrder ? $lastOrder->order_no + 1 : 1001;
-
             $order = new Order();
             $order->order_no = $orderNo;
             $order->table_id = $request->table_id;
@@ -91,6 +100,13 @@ class OrderController extends Controller
             $order->vat = $request->vat;
             $order->change_amount = $request->change_amount;
             $order->save();
+            if ($request->has('table_id')) {
+                $table = Table::find($request->table_id);
+                if ($table) {
+                    $table->order_id = $order->payment > 0 ? null : $order->id;
+                    $table->save();
+                }
+            }
 
             foreach ($request->items as $item) {
                 $orderDetail = new OrderDetails();
@@ -128,6 +144,7 @@ class OrderController extends Controller
             DB::rollBack();
             throw $exception;
         }
+
     }
 
     /**
@@ -190,7 +207,13 @@ class OrderController extends Controller
             $order->vat = $request->vat;
             $order->change_amount = $request->change_amount;
             $order->save();
-
+            if ($request->has('table_id')) {
+                $table = Table::find($request->table_id);
+                if ($table) {
+                    $table->order_id = $order->payment > 0 ? null : $order->id;
+                    $table->save();
+                }
+            }
             foreach ($request->items as $item) {
                 $orderDetail = new OrderDetails();
                 $dishType = DishPrice::findOrFail($item['dish_type_id']);

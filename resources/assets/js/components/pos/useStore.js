@@ -1,351 +1,401 @@
-// useStore.js
-import {ref, computed, readonly, onMounted} from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import axios from 'axios';
 
-// Create a singleton pattern to ensure the store is only initialized once
-let initialized = false;
-let initializationPromise = null;
-
-// Common state that will be shared across all instances
-const config = ref({
-    "hasInstall": "1",
-    "currency": {
-        "symbol": "IQD",
-        "currency": "IQD"
+// Default configuration constants
+const DEFAULT_CONFIG = {
+    hasInstall: "1",
+    currency: {
+        symbol: "IQD",
+        currency: "IQD"
     },
-    "vat": {
-        "vat_number": "123456",
-        "vat_percentage": "5"
+    vat: {
+        vat_number: "123456",
+        vat_percentage: "5"
     },
-    "contact": {
-        "phone": "01738070062",
-        "address": "Address"
-    }
-});
-
-const carts = ref([]);
-const tables = ref([]);
-const products = ref([]);
-const productCategories = ref([]);
-const discountAmount = ref(0);
-const currentPaymentAmount = ref('');
-const updateOrder = ref(null);
-const selectedTable = ref(null);
-const searchString = ref('');
-const isOrderModalVisible = ref(false);
-const toastMessage = ref('');
-const isToastVisible = ref(false);
-
-// Computed properties
-const subTotal = computed(() => {
-    return carts.value.reduce((total, item) => {
-        return total + (item.price * item.quantity);
-    }, 0);
-});
-
-const taxAmount = computed(() => {
-    const afterDiscountAmount = subTotal.value - discountAmount.value;
-    return afterDiscountAmount * (parseInt(config.value.vat.vat_percentage) / 100);
-});
-
-const finalTotal = computed(() => {
-    return subTotal.value - discountAmount.value + taxAmount.value;
-});
-
-// API functions
-const fetchProducts = async () => {
-    try {
-        const response = await axios.get('/web-api/dishes');
-        products.value = response.data;
-    } catch (err) {
-        console.error('Error fetching products:', err);
+    contact: {
+        phone: "01738070062",
+        address: "Address"
     }
 };
 
-const fetchTables = async () => {
-    try {
-        const response = await axios.get('/web-api/tables');
-        tables.value = response.data;
-    } catch (err) {
-        console.error('Error fetching tables:', err);
-    }
-};
-
-const fetchDishCategories = async () => {
-    try {
-        const response = await axios.get('/web-api/dish-categories');
-        productCategories.value = response.data;
-    } catch (err) {
-        console.error('Error fetching product categories:', err);
-    }
-}
-
-const fetchConfig = async () => {
-    try {
-        const response = await axios.get('/web-api/config');
-        config.value = response.data;
-    } catch (err) {
-        console.error('Error fetching config:', err);
-    }
-};
-
-const fetchOrderById = async () => {
-    if (!window.editOrderId) {
-        return;
-    }
-
-    try {
-        const response = await axios.get(`/get-order-details/${window.editOrderId}`);
-        updateOrder.value = response.data;
-
-        // Map order details to cart items
-        const order = response.data.order_details.map((item) => {
-            return {
-                cartItemId: item.id,
-                productId: item.dish_id,
-                variantId: item.dish_type_id,
-                name: item.dish?.dish,
-                variantName: item.dish_type?.dish_type,
-                price: item.dish_type?.price,
-                quantity: item.quantity,
-                image: item.dish?.thumbnail
-            };
-        });
-
-        carts.value = order;
-
-        // Find and set the selected table
-        if (response.data?.table_id && tables.value.length > 0) {
-            selectedTable.value = tables.value.find(el => el.id === response.data.table_id) || null;
-        }
-
-        // Set discount amount
-        discountAmount.value = response.data.discount || 0;
-    } catch (err) {
-        console.error('Error fetching order details:', err);
-    }
-};
-
-// Cart manipulation functions
-const addProductToCart = (product, selectedVariant = null) => {
-    // If no specific variant is selected, use the first price option
-    const variant = selectedVariant || product.dish_prices[0];
-
-    // Check if this dish variant is already in the cart
-    const existingCartItemIndex = carts.value.findIndex(item =>
-        item.productId === product.id && item.variantId === variant.id
-    );
-
-    if (existingCartItemIndex !== -1) {
-        // If the item exists, increase quantity
-        carts.value[existingCartItemIndex].quantity += 1;
-    } else {
-        // If the item doesn't exist, add it to the cart
-        carts.value.push({
-            cartItemId: Date.now(), // Unique ID for the cart item
-            productId: product.id,
-            variantId: variant.id,
-            name: product.dish,
-            variantName: variant.dish_type,
-            price: variant.price,
-            quantity: 1,
-            image: product.thumbnail
-        });
-    }
-};
-
-const updateCartItemQuantity = (cartItemId, newQuantity) => {
-    const index = carts.value.findIndex(item => item.cartItemId === cartItemId);
-    if (index !== -1) {
-        if (newQuantity <= 0) {
-            // Remove item if quantity is zero or negative
-            carts.value.splice(index, 1);
-        } else {
-            // Update quantity
-            carts.value[index].quantity = newQuantity;
-        }
-    }
-};
-
-const deleteProductFromCart = (cartItemId) => {
-    const index = carts.value.findIndex(item => item.cartItemId === cartItemId);
-    if (index !== -1) {
-        carts.value.splice(index, 1);
-    }
-};
-
-const clearCart = () => {
-    carts.value = [];
-    discountAmount.value = 0;
-    currentPaymentAmount.value = '';
-    selectedTable.value = null;
-};
-
-// Order processing functions
-const saveOrder = async (shouldPrint = false) => {
-    const orderData = {
-        table_id: selectedTable.value ? selectedTable.value.id : null,
-        payment: currentPaymentAmount.value ? currentPaymentAmount.value : null,
-        vat: taxAmount.value ? taxAmount.value : 0,
-        change_amount: currentPaymentAmount.value ? (finalTotal.value - currentPaymentAmount.value) : 0,
-        discount_amount: discountAmount.value ? discountAmount.value : 0,
-        items: carts.value.map(item => ({
-            dish_id: item.productId,
-            dish_type_id: item.variantId,
-            quantity: item.quantity,
-            net_price: item.price, // Single item price without tax
-            gross_price: item.price * item.quantity, // Total price for this item
-        }))
+// Create the store instance
+const createStore = () => {
+    // Reactive state
+    const state = {
+        config: ref(DEFAULT_CONFIG),
+        carts: ref([]),
+        tables: ref([]),
+        products: ref([]),
+        productCategories: ref([]),
+        discountAmount: ref(0),
+        currentPaymentAmount: ref(''),
+        updateOrder: ref(null),
+        selectedTable: ref(null),
+        searchString: ref(''),
+        isOrderModalVisible: ref(false),
+        toastMessage: ref(''),
+        isToastVisible: ref(false),
+        isLoading: ref(false),
+        isPrinting: ref(false),
+        initialized: ref(false),
+        toastTimer: ref(null)
     };
 
-    try {
-        let response;
+    // Computed properties
+    const getters = {
+        subTotal: computed(() => {
+            return state.carts.value.reduce((total, item) => {
+                return total + (item.price * item.quantity);
+            }, 0);
+        }),
 
-        if (window.editOrderId) {
-            response = await axios.put(`/update-order/${window.editOrderId}`, orderData);
-            showToast("Order updated successfully.");
-        } else {
-            response = await axios.post('/save-order', orderData);
-            clearCart();
-            showToast("Order saved successfully.");
-        }
+        taxAmount: computed(() => {
+            const afterDiscountAmount = getters.subTotal.value - state.discountAmount.value;
+            return afterDiscountAmount * (parseInt(state.config.value.vat.vat_percentage) / 100);
+        }),
 
-        isOrderModalVisible.value = false;
+        finalTotal: computed(() => {
+            return getters.subTotal.value - state.discountAmount.value + getters.taxAmount.value;
+        }),
 
-        if (shouldPrint && response.data.id) {
-            printInvoice(response.data.id);
-        }
+        filteredProducts: computed(() => {
+            if (!state.searchString.value) return state.products.value;
+            return state.products.value.filter(product =>
+                product.dish.toLowerCase().includes(state.searchString.value.toLowerCase())
+            );
+        }),
 
-        return response.data;
-    } catch (err) {
-        console.error('Error saving order:', err);
-        showToast("Error saving order. Please try again.");
-        throw err;
-    }
-};
+        cartItemCount: computed(() => {
+            return state.carts.value.reduce((count, item) => count + item.quantity, 0);
+        }),
 
-const printInvoice = async (orderId) => {
-    if (!orderId) {
-        showToast("Cannot print receipt: Order ID is missing", 3000);
-        return;
-    }
+        availableTables: computed(() => {
+            return state.tables.value.filter(table => table.status === 'available');
+        }),
 
-    try {
-        const response = await axios.get(`/print-order/${orderId}`, {
-            responseType: 'text'
-        });
+        occupiedTables: computed(() => {
+            return state.tables.value.filter(table => table.status === 'occupied');
+        })
+    };
 
-        // Open a new window for printing
-        const printWindow = window.open('', '', 'width=800,height=600,toolbar=0,menubar=0,location=0');
-        if (!printWindow) {
-            showToast("Unable to open print window. Please check your pop-up settings.");
-            return;
-        }
+    // Actions
+    const actions = {
+        async fetchProducts() {
+            try {
+                state.isLoading.value = true;
+                const response = await axios.get('/web-api/dishes');
+                state.products.value = response.data;
+            } catch (err) {
+                console.error('Error fetching products:', err);
+                actions.showToast("Failed to load products", 3000);
+            } finally {
+                state.isLoading.value = false;
+            }
+        },
 
-        // Write the HTML from the backend to the new window
-        printWindow.document.write(response.data);
-        printWindow.document.close();
+        async fetchTables() {
+            try {
+                state.isLoading.value = true;
+                const response = await axios.get('/web-api/tables');
+                state.tables.value = response.data;
+            } catch (err) {
+                console.error('Error fetching tables:', err);
+                actions.showToast("Failed to load tables", 3000);
+            } finally {
+                state.isLoading.value = false;
+            }
+        },
 
-        // Trigger print when content is loaded
-        printWindow.onload = function () {
-            printWindow.focus();
-            setTimeout(() => {
-                printWindow.print();
-                // Close the window after printing
-                printWindow.onafterprint = function () {
-                    printWindow.close();
-                };
-                // Fallback close for browsers that don't support onafterprint
-                setTimeout(() => {
-                    printWindow.close();
-                }, 1000);
-            }, 500);
-        };
-    } catch (error) {
-        console.error('Error printing invoice:', error);
-        showToast("Error printing receipt. Please try again.");
-    }
-};
+        async fetchDishCategories() {
+            try {
+                state.isLoading.value = true;
+                const response = await axios.get('/web-api/dish-categories');
+                state.productCategories.value = response.data;
+            } catch (err) {
+                console.error('Error fetching product categories:', err);
+            } finally {
+                state.isLoading.value = false;
+            }
+        },
 
-const showToast = (message, duration = 3000) => {
-    toastMessage.value = message;
-    isToastVisible.value = true;
+        async fetchConfig() {
+            try {
+                const response = await axios.get('/web-api/config');
+                state.config.value = response.data;
+            } catch (err) {
+                console.error('Error fetching config:', err);
+                state.config.value = DEFAULT_CONFIG;
+            }
+        },
 
-    // Auto-hide the toast after the specified duration
-    setTimeout(() => {
-        isToastVisible.value = false;
-    }, duration);
-};
+        async fetchOrderById() {
+            if (!window.editOrderId) return;
 
-// Initialize data
-const initializeStore = async () => {
-    if (initializationPromise) {
-        return initializationPromise;
-    }
+            try {
+                state.isLoading.value = true;
+                const response = await axios.get(`/get-order-details/${window.editOrderId}`);
+                state.updateOrder.value = response.data;
 
-    initializationPromise = (async () => {
-        if (!initialized) {
-            // Run these in parallel for efficiency
-            const promises = [
-                await fetchProducts(),
-                await fetchTables(),
-                await fetchConfig(),
-                await fetchDishCategories()
-            ];
+                const order = response.data.order_details.map((item) => ({
+                    cartItemId: item.id,
+                    productId: item.dish_id,
+                    variantId: item.dish_type_id,
+                    name: item.dish?.dish,
+                    variantName: item.dish_type?.dish_type,
+                    price: item.dish_type?.price,
+                    quantity: item.quantity,
+                    image: item.dish?.thumbnail
+                }));
 
-            await Promise.all(promises);
+                state.carts.value = order;
 
-            // This depends on tables being loaded, so we do it after
-            if (window.editOrderId) {
-                await fetchOrderById();
+                if (response.data?.table_id && state.tables.value.length > 0) {
+                    state.selectedTable.value = state.tables.value.find(el => el.id === response.data.table_id) || null;
+                }
+
+                state.discountAmount.value = response.data.discount || 0;
+            } catch (err) {
+                console.error('Error fetching order details:', err);
+                actions.showToast("Failed to load order details", 3000);
+            } finally {
+                state.isLoading.value = false;
+            }
+        },
+
+        setSelectedTableById(tableId) {
+            if (!state.tables.value.length) {
+                console.warn('Tables not loaded yet');
+                return false;
             }
 
-            initialized = true;
+            const table = state.tables.value.find(t => t.id === tableId);
+            if (table) {
+                state.selectedTable.value = table;
+                return true;
+            }
+
+            console.warn(`Table with ID ${tableId} not found`);
+            return false;
+        },
+
+        clearSelectedTable() {
+            state.selectedTable.value = null;
+        },
+
+        addProductToCart(product, selectedVariant = null) {
+            const variant = selectedVariant || product.dish_prices[0];
+            const existingIndex = state.carts.value.findIndex(item =>
+                item.productId === product.id && item.variantId === variant.id
+            );
+
+            if (existingIndex !== -1) {
+                state.carts.value[existingIndex].quantity += 1;
+            } else {
+                state.carts.value.push({
+                    cartItemId: Date.now(),
+                    productId: product.id,
+                    variantId: variant.id,
+                    name: product.dish,
+                    variantName: variant.dish_type,
+                    price: variant.price,
+                    quantity: 1,
+                    image: product.thumbnail
+                });
+            }
+            actions.showToast(`${product.dish} added to cart`);
+        },
+
+        updateCartItemQuantity(cartItemId, newQuantity) {
+            const index = state.carts.value.findIndex(item => item.cartItemId === cartItemId);
+            if (index !== -1) {
+                if (newQuantity <= 0) {
+                    state.carts.value.splice(index, 1);
+                } else {
+                    state.carts.value[index].quantity = newQuantity;
+                }
+            }
+        },
+
+        deleteProductFromCart(cartItemId) {
+            const index = state.carts.value.findIndex(item => item.cartItemId === cartItemId);
+            if (index !== -1) {
+                const [deletedItem] = state.carts.value.splice(index, 1);
+                actions.showToast(`${deletedItem.name} removed from cart`);
+            }
+        },
+
+        clearCart() {
+            state.carts.value = [];
+            state.discountAmount.value = 0;
+            state.currentPaymentAmount.value = '';
+            actions.showToast("Cart cleared");
+        },
+
+        async saveOrder(shouldPrint = false) {
+            if (state.carts.value.length === 0) {
+                actions.showToast("Cannot save empty order", 3000);
+                return;
+            }
+
+            const orderData = {
+                table_id: state.selectedTable.value?.id || null,
+                payment: state.currentPaymentAmount.value || null,
+                vat: getters.taxAmount.value || 0,
+                change_amount: state.currentPaymentAmount.value ?
+                    (getters.finalTotal.value - state.currentPaymentAmount.value) : 0,
+                discount_amount: state.discountAmount.value || 0,
+                items: state.carts.value.map(item => ({
+                    dish_id: item.productId,
+                    dish_type_id: item.variantId,
+                    quantity: item.quantity,
+                    net_price: item.price,
+                    gross_price: item.price * item.quantity,
+                }))
+            };
+
+            try {
+                state.isLoading.value = true;
+                let response;
+
+                if (window.editOrderId) {
+                    response = await axios.put(`/update-order/${window.editOrderId}`, orderData);
+                    actions.showToast("Order updated successfully");
+                } else {
+                    response = await axios.post('/save-order', orderData);
+                    actions.clearCart();
+                    actions.showToast("Order saved successfully");
+                }
+
+                state.isOrderModalVisible.value = false;
+
+                if (shouldPrint && response.data.id) {
+                    await actions.printInvoice(response.data.id);
+                }
+
+                return response.data;
+            } catch (err) {
+                console.error('Error saving order:', err);
+                actions.showToast("Error saving order. Please try again.", 3000);
+                throw err;
+            } finally {
+                state.isLoading.value = false;
+            }
+        },
+
+        async printInvoice(orderId) {
+            if (!orderId) {
+                actions.showToast("Cannot print receipt: Order ID is missing", 3000);
+                return;
+            }
+
+            try {
+                state.isPrinting.value = true;
+                const response = await axios.get(`/print-order/${orderId}`, {
+                    responseType: 'text'
+                });
+
+                const printWindow = window.open('', '_blank', 'width=800,height=600');
+                if (!printWindow) {
+                    actions.showToast("Please allow pop-ups to print receipt", 3000);
+                    return;
+                }
+
+                printWindow.document.write(response.data);
+                printWindow.document.close();
+
+                await new Promise(resolve => {
+                    printWindow.onload = () => {
+                        printWindow.focus();
+                        setTimeout(() => {
+                            printWindow.print();
+                            if ('onafterprint' in printWindow) {
+                                printWindow.onafterprint = () => {
+                                    printWindow.close();
+                                    resolve();
+                                };
+                            } else {
+                                setTimeout(() => {
+                                    printWindow.close();
+                                    resolve();
+                                }, 1000);
+                            }
+                        }, 500);
+                    };
+                });
+            } catch (error) {
+                console.error('Error printing invoice:', error);
+                actions.showToast("Error printing receipt", 3000);
+            } finally {
+                state.isPrinting.value = false;
+            }
+        },
+
+        showToast(message, duration = 3000) {
+            state.toastMessage.value = message;
+            state.isToastVisible.value = true;
+
+            if (state.toastTimer) clearTimeout(state.toastTimer);
+            state.toastTimer = setTimeout(() => {
+                state.isToastVisible.value = false;
+            }, duration);
+        },
+
+        async initializeStore() {
+            if (state.initialized.value) return;
+
+            try {
+                state.isLoading.value = true;
+                await Promise.all([
+                    this.fetchProducts(),
+                    this.fetchTables(),
+                    this.fetchConfig(),
+                    this.fetchDishCategories()
+                ]);
+
+                // Set initial table from URL parameter or default
+                const urlParams = new URLSearchParams(window.location.search);
+                const tableIdParam = urlParams.get('table_id') || window.initialSelectedTableId || window.table_id;
+
+                if (tableIdParam) {
+                    this.setSelectedTableById(Number(tableIdParam));
+                }
+
+                if (window.editOrderId) {
+                    await this.fetchOrderById();
+                }
+
+                state.initialized.value = true;
+            } catch (error) {
+                console.error('Store initialization failed:', error);
+                this.showToast("Failed to initialize application", 3000);
+            } finally {
+                state.isLoading.value = false;
+            }
         }
-    })();
-
-    return initializationPromise;
-};
-
-export default function useStore() {
-    // Initialize data on first use
-    onMounted(() => {
-        initializeStore();
-    });
+    };
 
     return {
         // State
-        config,
-        products,
-        productCategories,
-        tables,
-        selectedTable,
-        searchString,
-        carts,
-        discountAmount,
-        currentPaymentAmount,
-        updateOrder,
-        isOrderModalVisible,
-        toastMessage,
-        isToastVisible,
-
-        // Computed
-        subTotal,
-        taxAmount,
-        finalTotal,
-
-        // Methods
-        addProductToCart,
-        deleteProductFromCart,
-        updateCartItemQuantity,
-        clearCart,
-        saveOrder,
-        printInvoice,
-        showToast,
-
-        // Make these available for manual refresh if needed
-        fetchProducts,
-        fetchTables,
-        fetchConfig,
-        fetchOrderById
+        ...state,
+        // Getters
+        ...getters,
+        // Actions
+        ...actions
     };
+};
+
+// Singleton pattern
+let storeInstance;
+
+export default function useStore() {
+    if (!storeInstance) {
+        storeInstance = createStore();
+    }
+
+    // Initialize on first use
+    onMounted(() => {
+        storeInstance.initializeStore();
+    });
+
+    return storeInstance;
 }

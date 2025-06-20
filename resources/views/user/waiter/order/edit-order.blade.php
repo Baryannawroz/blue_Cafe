@@ -13,6 +13,7 @@
     <script>
         window.componentName = 'pos'; // Set the name of the component here dynamically
         window.editOrderId = {{$order->id}}
+
     </script>
 
 @endsection
