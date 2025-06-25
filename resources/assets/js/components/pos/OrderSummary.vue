@@ -114,7 +114,7 @@
 
         <div class="order-actions">
             <div class="actions-grid">
-                <div class="btn btn-outline" role="button" @click="saveOrder">
+                <div class="btn btn-outline" role="button" @click="saveOrder()">
                     Save
                     <span class="shortcut-badge">F7</span>
                 </div>
@@ -360,7 +360,8 @@ watch(() => [...carts.value], (newCart, oldCart) => {
 <style scoped>
 /* Order Summary */
 .order-summary {
-    width: 350px;
+    width: 100% !important;
+    max-width:500px;
     background-color: white;
     border-left: 1px solid #e0e0e0;
     display: flex;

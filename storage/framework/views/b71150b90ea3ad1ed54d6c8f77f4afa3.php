@@ -45,7 +45,7 @@
 
                     <?php if (\Illuminate\Support\Facades\Blade::check('admin')): ?>
                     <ul class="nav navbar-nav hidden-xs">
-                        <li><a href="<?php echo e(url('/new-order')); ?>" class="waves-effect waves-light">New Order</a></li>
+                        <li><a href="<?php echo e(url('/order')); ?>" class="waves-effect waves-light">New Order</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown"
                                role="button" aria-haspopup="true" aria-expanded="false">Shortcut menu <span
@@ -62,7 +62,7 @@
 
                     <?php if (\Illuminate\Support\Facades\Blade::check('manager')): ?>
                     <ul class="nav navbar-nav hidden-xs">
-                        <li><a href="<?php echo e(url('/new-order')); ?>" class="waves-effect waves-light">New Order</a></li>
+                        <li><a href="<?php echo e(url('/neworder')); ?>" class="waves-effect waves-light">New Order</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown"
                                role="button" aria-haspopup="true" aria-expanded="false">Shortcut menu <span

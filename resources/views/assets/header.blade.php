@@ -45,7 +45,7 @@
 
                     @admin
                     <ul class="nav navbar-nav hidden-xs">
-                        <li><a href="{{url('/new-order')}}" class="waves-effect waves-light">New Order</a></li>
+                        <li><a href="{{url('/order')}}" class="waves-effect waves-light">New Order</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown"
                                role="button" aria-haspopup="true" aria-expanded="false">Shortcut menu <span
@@ -62,7 +62,7 @@
 
                     @manager
                     <ul class="nav navbar-nav hidden-xs">
-                        <li><a href="{{url('/new-order')}}" class="waves-effect waves-light">New Order</a></li>
+                        <li><a href="{{url('/neworder')}}" class="waves-effect waves-light">New Order</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown"
                                role="button" aria-haspopup="true" aria-expanded="false">Shortcut menu <span

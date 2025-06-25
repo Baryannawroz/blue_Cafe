@@ -12,7 +12,6 @@ New Order
         @foreach ($tableGroup as $table)
         <div class="col-md-4 mb-3">
             <a href="{{ $table->order_id != null ? 'edit-order/' . $table->order_id : 'new-order/'. $table->id }}">
-
                 <div class="card table-card h-100 shadow-sm border-0">
                     <div class="card-body text-center p-4">
                         <div class="table-icon mb-3">

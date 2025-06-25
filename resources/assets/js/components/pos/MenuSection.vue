@@ -178,11 +178,13 @@ const filteredProducts = computed(() => {
 
 .categories-tabs {
     display: flex;
-    overflow-x: auto;
+    flex-wrap: wrap; /* This makes items wrap to next line */
+    margin: 5px;
     margin-bottom: 20px;
     border-bottom: 1px solid #e0e0e0;
     padding-bottom: 1px;
     scrollbar-width: thin;
+
 }
 
 .categories-tabs::-webkit-scrollbar {
@@ -217,7 +219,7 @@ const filteredProducts = computed(() => {
 
 .menu-items {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 15px;
 }
 
@@ -476,7 +478,7 @@ const filteredProducts = computed(() => {
     }
 
     .menu-items {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     }
 
     .menu-item-image {

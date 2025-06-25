@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="btn-group pull-right m-t-15">
-                <a href="{{url('/new-order')}}" class="btn btn-default waves-effect">New Order <span class="m-l-5"><i
+                <a href="{{url('/order')}}" class="btn btn-default waves-effect">New Order <span class="m-l-5"><i
                             class="fa fa-plus"></i></span></a>
             </div>
 

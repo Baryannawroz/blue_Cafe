@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\OfficeExpanse;
 use App\Models\Order;
+use App\Models\Reason;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -16,7 +17,8 @@ class AccountantController extends Controller
     public function addExpanse()
     {
         return view('user.admin.accountant.new-expanse',[
-            'account_menu'  =>  true
+            'account_menu'  =>  true,
+            'reasons'  =>  Reason::all(),
         ]);
     }
 
