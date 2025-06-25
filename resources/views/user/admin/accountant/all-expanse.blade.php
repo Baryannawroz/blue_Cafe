@@ -13,7 +13,7 @@
             </div>
 
             <h4 class="page-title">All
-                Expanse {{config('restaurant.currency.symbol')}} {{number_format($office_expanse->sum('expanse'),2)}} {{config('restaurant.currency.currency')}}</h4>
+                Expanse {{config('restaurant.currency.symbol')}} {{number_format($office_expanse->sum('expanse'))}} {{config('restaurant.currency.currency')}}</h4>
             <ol class="breadcrumb">
                 <li>
                     <a href="{{url('/')}}">Home</a>
@@ -44,16 +44,16 @@
 
             <h3>{{$expanse[0]->created_at->format('M-Y')}} -
                 <small>Total expanse :
-                </small> {{config('restaurant.currency.symbol')}} {{number_format($expanse->sum('expanse')+$purses_cost ,2)}}  {{config('restaurant.currency.currency')}}
+                </small> {{config('restaurant.currency.symbol')}} {{number_format($expanse->sum('expanse')+$purses_cost )}}  {{config('restaurant.currency.currency')}}
             </h3>
             <h4>
                 Office Expanse :
                 {{config('restaurant.currency.symbol')}}
-                {{number_format($expanse->sum('expanse') ,2)}}
+                {{number_format($expanse->sum('expanse'))}}
                 {{config('restaurant.currency.currency')}} |
                 Purses expanse :
                 {{config('restaurant.currency.symbol')}}
-                {{number_format($purses_cost ,2)}}
+                {{number_format($purses_cost )}}
                 {{config('restaurant.currency.currency')}}
             </h4>
             <div class="table-responsive">
@@ -80,7 +80,7 @@
                                    onclick="$(this).confirmDelete('/delete-expanse/{{$_expanse->id}}')"><i
                                             class="fa fa-trash-o"></i></a>
                             </td>
-                            <th>{{config('restaurant.currency.symbol')}} {{number_format($_expanse->expanse,2)}} {{config('restaurant.currency.currency')}}</th>
+                            <th>{{config('restaurant.currency.symbol')}} {{number_format($_expanse->expanse)}} {{config('restaurant.currency.currency')}}</th>
                             <td>{{$_expanse->user->name}}</td>
                             <td>{{$_expanse->created_at->format('d-M-Y')}}</td>
                         </tr>
@@ -91,7 +91,7 @@
                             <td>{{$p_expanse->created_at->format('M - Y')}}</td>
                             <td><a href="{{url('/purses-payment/'.$p_expanse->id)}}" target="_blank">Purses <i
                                             class="fa fa-external-link"></i> </a></td>
-                            <th>{{config('restaurant.currency.symbol')}} {{number_format($p_expanse->pursesProducts->sum('gross_price'),2)}} {{config('restaurant.currency.currency')}}</th>
+                            <th>{{config('restaurant.currency.symbol')}} {{number_format($p_expanse->pursesProducts->sum('gross_price'))}} {{config('restaurant.currency.currency')}}</th>
                             <td>{{$p_expanse->user->name}}</td>
                             <td>{{$p_expanse->created_at->format('d-M-Y')}}</td>
                         </tr>

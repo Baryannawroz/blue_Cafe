@@ -16,7 +16,7 @@
                 <a href="{{url('/add-expense')}}" class="btn btn-default waves-effect">New Expense <span class="m-l-5"></span></a>
             </div>
 
-            <h4 class="page-title">Total Income {{config('restaurant.currency.symbol')}} {{number_format($total_earn->sum('payment'),2)}} {{config('restaurant.currency.currency')}}</h4>
+            <h4 class="page-title">Total Income {{config('restaurant.currency.symbol')}} {{number_format($total_earn->sum('payment'))}} {{config('restaurant.currency.currency')}}</h4>
             <ol class="breadcrumb">
                 <li>
                     <a href="{{url('/')}}">Home</a>
@@ -32,7 +32,7 @@
     </div>
     <div class="card-box">
         @foreach($orders as $od)
-            <h3>{{$od[0]->created_at->format('M-Y')}} - <small>Total Earn</small> : {{config('restaurant.currency.symbol')}} {{number_format($od->sum('payment'),2)}} {{config('restaurant.currency.currency')}}</h3>
+            <h3>{{$od[0]->created_at->format('M-Y')}} - <small>Total Earn</small> : {{config('restaurant.currency.symbol')}} {{number_format($od->sum('payment'))}} {{config('restaurant.currency.currency')}}</h3>
             <div class="table-responsive">
                 <table id=""
                        class="table datatable-responsive table-striped table-bordered dt-responsive nowrap" cellspacing="0"
@@ -55,8 +55,8 @@
                             <td>{{$d->id}}</td>
                             <td>{{$d->table_id == 0 ? $d->table_id : $d->table->table_no}}</td>
                             <td>{{$currency_symbol}} {{$d->orderPrice->sum('gross_price')}} {{$currency}}</td>
-                            <th>{{$currency_symbol}} {{number_format(round($d->payment + ($d->payment * $d->vat) /1000),2)}} {{$currency}}</th>
-                            <td>{{$currency_symbol}} {{number_format($d->payment,2)}} {{$currency}}</td>
+                            <th>{{$currency_symbol}} {{number_format(round($d->payment + ($d->payment * $d->vat) /1000))}} {{$currency}}</th>
+                            <td>{{$currency_symbol}} {{number_format($d->payment)}} {{$currency}}</td>
                             <td>{{$currency_symbol}} {{$d->change_ammount ? $d->change_ammount : 0}} {{$currency}}</td>
                             <td>{{$d->vat}} %</td>
                             <td>{{$d->created_at->format('d-M-Y')}}</td>

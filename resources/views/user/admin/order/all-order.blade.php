@@ -51,7 +51,7 @@
                     <tr>
                         <td>{{str_pad($o->id,4,0,STR_PAD_LEFT)}}</td>
                         <td>{{$o->servedBy->name}}</td>
-                        <td>{{config('restaurant.currency.symbol')}} {{number_format($orderSum,2)}} {{config('restaurant.currency.currency')}}</td>
+                        <td>{{config('restaurant.currency.symbol')}} {{number_format($orderSum)}} {{config('restaurant.currency.currency')}}</td>
                         <td>{{$o->kitchen ? $o->kitchen->name : "Pending"}}</td>
                         <td>{{$o->servedBy->name}}</td>
                         <td>

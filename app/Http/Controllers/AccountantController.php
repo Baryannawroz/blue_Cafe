@@ -44,8 +44,7 @@ class AccountantController extends Controller
         $expanse->expanse = $request->get('expense');
         $expanse->user_id = auth()->user()->id;
         if($expanse->save()){
-            return response()->json('Ok',200);
-        }
+            return redirect('/all-expanse')->with('message', 'Your expense was saved successfully!');        }
     }
 
     /**

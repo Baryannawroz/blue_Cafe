@@ -171,7 +171,7 @@ Route::middleware('active.user')->group(function () {
         // AccountantController
         Route::get('/account-summary', [AccountantController::class, 'summary']);
         Route::any('/add-expense', [AccountantController::class, 'addExpanse']);
-        Route::post('/edit-expanse/{id}', [AccountantController::class, 'editExpanse']);
+        Route::any('/edit-expanse/{id}', [AccountantController::class, 'editExpanse']);
         Route::post('/save-expense', [AccountantController::class, 'saveExpanse']);
         Route::post('/update-expanse/{id}', [AccountantController::class, 'updateExpanse']);
         Route::get('/delete-expanse/{id}', [AccountantController::class, 'deleteExpanse']);

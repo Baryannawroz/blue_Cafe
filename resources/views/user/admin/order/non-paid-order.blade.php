@@ -53,7 +53,7 @@
                     <td>{{$order->table ? $order->table->table_no : "Table not selected"}}</td>
                     <td>{{$order->servedBy->name}}</td>
                     <td>
-                        {{config('restaurant.currency.symbol')}} {{number_format($orderSum,2)}} {{config('restaurant.currency.currency')}}
+                        {{config('restaurant.currency.symbol')}} {{number_format($orderSum)}} {{config('restaurant.currency.currency')}}
                         {{--<dl class="dl-horizontal m-b-0">--}}
                         {{--<dt>--}}
                         {{--Order Value :--}}
