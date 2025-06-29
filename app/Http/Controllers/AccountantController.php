@@ -39,6 +39,7 @@ class AccountantController extends Controller
     public function saveExpanse(Request $request)
     {
         $expanse = new OfficeExpanse();
+        $expanse->reason_id = $request->get('reason_id');
         $expanse->title = $request->get('title');
         $expanse->date = Carbon::parse($request->get('date'))->format('Y-m-d');
         $expanse->expanse = $request->get('expense');
@@ -89,7 +90,8 @@ class AccountantController extends Controller
     {
         $expanse = OfficeExpanse::findOrFail($id);
         return view('user.admin.accountant.edit-expanse',[
-            'expanse'       =>      $expanse
+            'expanse'       =>      $expanse,
+            'reasons'       =>      Reason::all()
         ]);
     }
 
@@ -97,11 +99,12 @@ class AccountantController extends Controller
     {
         $expanse =  OfficeExpanse::findOrFail($id);
         $expanse->title = $request->get('title');
+        $expanse->reason_id = $request->get('reason_id');
         $expanse->date = Carbon::parse($request->get('date'))->format('Y-m-d');
         $expanse->expanse = $request->get('expanse');
         $expanse->user_id = auth()->user()->id;
         if($expanse->save()){
-            return response()->json('Ok',200);
+            return  redirect('all-expanse');
         }
     }
 

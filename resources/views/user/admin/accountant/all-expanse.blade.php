@@ -64,6 +64,7 @@
                     <thead>
                     <tr>
                         <th>Month</th>
+                        <th>Reason</th>
                         <th>Coz if expanse</th>
                         <th> Value</th>
                         <th>Expanse By</th>
@@ -74,6 +75,7 @@
                     @foreach($expanse as $_expanse)
                         <tr>
                             <td>{{$_expanse->created_at->format('M - Y')}}</td>
+                            <td>{{$_expanse->reason->name}}
                             <td>{{$_expanse->title}}
                                 <a href="{{url('/edit-expanse/'.$_expanse->id)}}"><i class="fa fa-pencil"></i></a>
                                 <a href="javascript:void(0);" class="text-danger"

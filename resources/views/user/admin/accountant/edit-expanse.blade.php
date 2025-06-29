@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="btn-group pull-right m-t-15">
-                <a href="{{url('/all-table')}}" class="btn btn-default waves-effect">All Expense <span class="m-l-5"></span></a>
+                <a href="{{url('/all-expanse')}}" class="btn btn-default waves-effect">All Expense <span class="m-l-5"></span></a>
             </div>
 
             <h4 class="page-title">New Expanse </h4>
@@ -31,8 +31,20 @@
     <div class="row">
         <div class="card-box">
 
-            <form class="form-horizontal" role="form" method="post" id="expanseForm" action="#" data-parsley-validate novalidate>
+            <form class="form-horizontal" role="form" method="post" id="expanseForm" action="/update-expanse/{{ $expanse->id }}" data-parsley-validate novalidate>
                 {{csrf_field()}}
+
+
+                <div class="form-group">
+                    <label for="title" class="col-sm-3 control-label">Reason:</label>
+                    <div class="col-sm-6">
+                        <select name="reason_id" id="" class="form-control">
+                            @foreach ($reasons as $reason)
+                            <option value="{{ $reason->id }}"  {{ $reason->id == $expanse->reason_id ? 'selected':'' }}>{{ $reason->name }}</option>
+                            @endforeach
+                        </select>
+                        </div>
+                        </div>
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-3 control-label">Cause Of Expanse :</label>
                     <div class="col-sm-6">

@@ -9,4 +9,5 @@ class Reason extends Model
 {
     use HasFactory;
     public $guarded=[];
+    public $timestamps = false;
 }

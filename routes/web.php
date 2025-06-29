@@ -9,6 +9,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageEditorController;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\PursesController;
+use App\Http\Controllers\ReasonController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StockController;
@@ -169,6 +170,8 @@ Route::middleware('active.user')->group(function () {
         Route::post('/save-purses-payment/{purses_id}', [PursesController::class, 'savePursesPayment']);
 
         // AccountantController
+        Route::any('/add-reason', [ReasonController::class, 'create']);
+        Route::any('/save-reason', [ReasonController::class, 'store']);
         Route::get('/account-summary', [AccountantController::class, 'summary']);
         Route::any('/add-expense', [AccountantController::class, 'addExpanse']);
         Route::any('/edit-expanse/{id}', [AccountantController::class, 'editExpanse']);

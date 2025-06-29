@@ -21,6 +21,7 @@ class ReasonController extends Controller
      */
     public function create()
     {
+        return view('user.admin.accountant.add-reason');
         //
     }
 
@@ -29,12 +30,11 @@ class ReasonController extends Controller
      */
     public function store(StoreReasonRequest $request)
     {
-        //
+        Reason::create($request->validated());
+        return redirect("/add-expense");
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(Reason $reason)
     {
         //

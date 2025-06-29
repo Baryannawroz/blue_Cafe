@@ -8,7 +8,7 @@ New Expense
 <div class="row">
     <div class="col-sm-12">
         <div class="btn-group pull-right m-t-15">
-            <a href="{{ url('/all-expanse') }}" class="btn btn-default waves-effect"> All Expenses </a>
+            <a href="{{ url('/all-expanse') }}" class="btn btn-default waves-effect"> All Expenses   </a>
             <a href="{{ url('/add-reason') }}" class="btn btn- waves-effect">Add reason</a>
         </div>
 
@@ -24,43 +24,20 @@ New Expense
 
 <div class="row">
     <div class="card-box">
-        <form class="form-horizontal" role="form" method="post" id="expenseForm" action="{{ url('/save-expense') }}"
+        <form class="form-horizontal" role="form" method="post" id="expenseForm" action="{{ url('/save-reason') }}"
             data-parsley-validate novalidate>
             {{ csrf_field() }}
 
             <div class="form-group">
-                <label for="title" class="col-sm-3 control-label">Cause of Expense:</label>
+                <label for="title" class="col-sm-3 control-label">Reason :</label>
                 <div class="col-sm-6">
-                    <input type="text" name="title" required class="form-control" id="title"
-                        placeholder="Cause of expense">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="title" class="col-sm-3 control-label">Cause of Expense:</label>
-                <div class="col-sm-6">
-                    <select name="reason_id" id="" class="form-control">
-                        @foreach ($reasons as $reason)
-                        <option value="{{ $reason->id }}">{{ $reason->name }}</option>
-                        @endforeach
-                    </select>
+                    <input type="text" name="name" required class="form-control" id="title"
+                        placeholder="Reason name">
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="date" class="col-sm-3 control-label">Date of Expense:</label>
-                <div class="col-sm-6">
-                    <input type="date" name="date" required class="form-control" placeholder="mm/dd/yyyy"
-                        id="datepicker-autoclose">
-                </div>
-            </div>
 
-            <div class="form-group">
-                <label for="amount" class="col-sm-3 control-label">Expense Cost:</label>
-                <div class="col-sm-6">
-                    <input type="text" name="expense" required data-parsley-type="number" class="form-control"
-                        id="amount" placeholder="Cost">
-                </div>
-            </div>
+
 
             <div class="form-group m-b-0">
                 <div class="col-sm-offset-3 col-sm-9">

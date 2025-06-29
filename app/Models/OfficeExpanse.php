@@ -11,4 +11,8 @@ class OfficeExpanse extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function reason()
+    {
+        return $this->belongsTo(Reason::class);
+    }
 }
