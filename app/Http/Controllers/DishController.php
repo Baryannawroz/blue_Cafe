@@ -113,10 +113,13 @@ class DishController extends Controller
         $dish->dish = $request->get('dish');
         $dish->category_id = $request->get('category_id');
         if ($request->hasFile('thumbnail')) {
-            $dish->thumbnail = $request->file('thumbnail')
-                ->move('uploads/dish/thumbnail',
-                    rand(8000000, 99999999) . '.' . $request->thumbnail->extension());
+            $filename = rand(8000000, 99999999) . '.' . $request->thumbnail->extension();
+            $path = $request->file('thumbnail')->move('uploads/dish/thumbnail', $filename);
+
+            // Fix backslash issue on Windows
+            $dish->thumbnail = str_replace('\\', '/', $path);
         }
+
         $dish->user_id = auth()->user()->id;
         if ($dish->save()) {
             return redirect()->to('/dish-price/' . $dish->id);
@@ -140,10 +143,14 @@ class DishController extends Controller
         $dish->dish = $request->get('dish');
         $dish->category_id = $request->get('category_id');
         if ($request->hasFile('thumbnail')) {
-            $dish->thumbnail = $request->file('thumbnail')
-                ->move('uploads/dish/thumbnail',
-                    rand(8000000, 99999999) . '.' . $request->thumbnail->extension());
+            $filename = rand(8000000, 99999999) . '.' . $request->thumbnail->extension();
+            $path = $request->file('thumbnail')->move('uploads/dish/thumbnail', $filename);
+
+            // Fix backslash issue on Windows
+            $dish->thumbnail = str_replace('\\', '/', $path);
         }
+
+
         $dish->user_id = auth()->user()->id;
         $dish->available = $request->get('available') == 'on' ? 1 : 0;
         if ($dish->save()) {

@@ -82,7 +82,7 @@
                 <li>
                     <i class="ti-download text-success"></i>
                     <span class="text">Dish One - <?php echo e($dish_price->dish_type); ?></span>
-                    <span class="text-success tran-price"><?php echo e(config('restaurant.currency.symbol')); ?> <?php echo e(number_format($dish_price->price,2)); ?> <?php echo e(config('restaurant.currency.currency')); ?></span>
+                    <span class="text-success tran-price"><?php echo e(config('restaurant.currency.symbol')); ?> <?php echo e(number_format($dish_price->price)); ?> <?php echo e(config('restaurant.currency.currency')); ?></span>
                     <span class="pull-right">|
                         <a href="<?php echo e(url('/edit-dish-price/'.$dish_price->id)); ?>" class="btn btn-link"><i class="fa fa-pencil"></i></a>
                         <a href="#" onclick="$(this).confirmDelete('/delete-dish-type/'+<?php echo e($dish_price->id); ?>)" class="btn btn-link text-danger"><i class="fa fa-trash-o"></i></a>
