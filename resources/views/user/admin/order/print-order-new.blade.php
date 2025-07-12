@@ -105,6 +105,7 @@
         .items-table .qty {
             width: 10%;
             text-align: center;
+            font-size: 20px;
         }
 
         .items-table .rate,
@@ -200,6 +201,9 @@
                 margin: 0;
                 padding: 0;
                 border: none;
+            }
+            .info-value {
+               font-size: 20px;
             }
         }
     </style>

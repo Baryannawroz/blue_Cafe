@@ -50,8 +50,8 @@
                  :class="{ 'cart-item-new': animatingItems[cart.cartItemId] }">
                 <div class="cart-item-details">
                     <div class="cart-item-name">{{ cart.name }}</div>
-                    <div class="cart-item-variant">{{ cart.variantName }}</div>
-                    <div class="cart-item-price">${{ cart.price }}</div>
+   <!--        <div class="cart-item-variant">{{ cart.variantName }}</div> -->
+                    <div class="cart-item-price">{{ cart.price }}</div>
                 </div>
                 <div class="cart-item-actions">
                     <button class="quantity-btn" @click="updateCartItemQuantity(cart.cartItemId, cart.quantity - 1)">-
