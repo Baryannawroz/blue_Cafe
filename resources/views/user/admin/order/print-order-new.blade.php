@@ -291,13 +291,12 @@
             <div class="total-row">
                 <div class="total-label">Discount:</div>
                 <div class="total-value">
-                    -{{ config('restaurant.currency.symbol') }}{{ number_format($order->discount_amount, 2) }}</div>
+                    -{{ config('restaurant.currency.symbol') }}{{ number_format($order->discount_amount, 0) }}</div>
             </div>
             @endif
 
             <div class="total-row">
-                <div class="total-label">VAT ({{ config('restaurant.vat.vat_percentage') }}%):</div>
-                <div class="total-value">{{ config('restaurant.currency.symbol') }}{{ number_format($order->vat, 2) }}
+                <div class="total-value">{{ config('restaurant.currency.symbol') }}{{ number_format($order->vat, 0) }}
                 </div>
             </div>
 
@@ -373,20 +372,9 @@
         </div>
     </div>
 
-    <!-- Scripts to auto-trigger print -->
     <script>
-        // Auto-print when page loads
-    window.onload = function () {
-        // Small delay to ensure content is fully loaded
-        // setTimeout(function() {
-        //     window.print();
-        //
-        //     // Optional: Close window after printing (uncomment if desired)
-        //     // window.addEventListener('afterprint', function() {
-        //     //     window.close();
-        //     // });
-        // }, 500);
-    };
+            window.print();
+            window.close();
     </script>
 </body>
 

@@ -141,7 +141,7 @@
                             <div class="summary-value">
                                 <strong>
                                     {{ config.currency.symbol }}
-                                    {{ subTotal.toFixed(2) }}
+                                    {{ subTotal.toFixed(0) }}
                                 </strong>
                             </div>
                         </div>
@@ -151,7 +151,7 @@
                         </div>
                         <div class="summary-row">
                             <div class="summary-label">Total tax amount:</div>
-                            <div class="summary-value">{{ config.currency.symbol }}{{ taxAmount.toFixed(2) }}</div>
+                            <div class="summary-value">{{ config.currency.symbol }}{{ taxAmount.toFixed(0) }}</div>
                         </div>
                         <div class="summary-row total">
                             <div class="summary-label">
@@ -160,7 +160,7 @@
                             <div class="summary-value">
                                 <strong>
                                     {{ config.currency.symbol }}
-                                    {{ finalTotal.toFixed(2) }}
+                                    {{ finalTotal.toFixed(0) }}
                                 </strong>
                             </div>
                         </div>
@@ -178,11 +178,11 @@
 
 
                     <!-- Add Payment -->
-                    <div class="add-payment">
+                    <div class="add-payment hidden">
                         <h4>Add Payment</h4>
                         <div class="payment-input">
                             <div class="input-group">
-                                <span class="currency-symbol">{{ config.currency.symbol }}</span>
+                                <span class="currency-symbol">{{ config.currency.symbol }}  </span>
                                 <input
                                     autofocus
                                     @keydown.enter="saveOrder(true)"
@@ -199,10 +199,10 @@
                     <!-- Complete Order Button -->
                     <div class="model-footer">
                         <div style="display: flex; gap: 15px; width: 100%;">
-                            <button class="btn btn-outline" @click="saveOrder" role="button">
+                            <button class="btn btn-outline" @click="saveOrder(false,true)" role="button">
                                 Complete Order
                             </button>
-                            <button class="btn btn-success btn-block" @click="saveOrder(true)" role="button">
+                            <button class="btn btn-success btn-block" @click="saveOrder(true,true)" role="button">
                                 Complete & Print Order
                             </button>
                         </div>
@@ -355,6 +355,30 @@ watch(() => [...carts.value], (newCart, oldCart) => {
     previousCartLength.value = newCart.length;
     scrollToBottom();
 }, {deep: true});
+</script>
+<script>
+export default {
+  props: {
+    subTotal: {
+      type: Number,
+      required: true,
+    },
+    remainingBalance: {
+      type: Number,
+      required: true,
+    }
+  },
+  data() {
+    return {
+      currentPaymentAmount: this.subTotal // Initialize from prop
+    };
+  },
+  methods: {
+    saveOrder(confirm) {
+      // your save logic
+    }
+  }
+};
 </script>
 
 <style scoped>

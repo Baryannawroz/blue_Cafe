@@ -231,15 +231,19 @@ const createStore = () => {
             actions.showToast("Cart cleared");
         },
 
-        async saveOrder(shouldPrint = false) {
+        async saveOrder(shouldPrint = false,orderComplete =false) {
             if (state.carts.value.length === 0) {
                 actions.showToast("Cannot save empty order", 3000);
                 return;
             }
+const total = state.carts.value.reduce((sum, item) => {
+  return sum + (item.price * item.quantity);
+}, 0);
+
 
             const orderData = {
                 table_id: state.selectedTable.value?.id || null,
-                payment: state.currentPaymentAmount.value || null,
+                payment:orderComplete ? total : state.currentPaymentAmount.value || null,
                 vat: getters.taxAmount.value || 0,
                 change_amount: state.currentPaymentAmount.value ?
                     (getters.finalTotal.value - state.currentPaymentAmount.value) : 0,
