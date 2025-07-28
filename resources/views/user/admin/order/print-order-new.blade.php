@@ -304,7 +304,7 @@
                 <div class="total-label">TOTAL:</div>
                 <div class="total-value">{{ config('restaurant.currency.symbol') }}{{
                     number_format($order->orderPrice->sum('gross_price')+($order->orderPrice->sum('gross_price')*$order->vat)/100
-                    - $order->discount_amount, 2) }}</div>
+                    - $order->discount_amount, 0) }}</div>
             </div>
         </div>
 
@@ -317,7 +317,7 @@
             <div class="payment-row">
                 <div class="payment-label">Card:</div>
                 <div class="payment-value">{{ config('restaurant.currency.symbol') }}{{
-                    number_format($order->payment_card, 2) }}</div>
+                    number_format($order->payment_card, 0) }}</div>
             </div>
             @if(isset($order->card_number))
             <div class="payment-row card-number">
@@ -331,7 +331,7 @@
             <div class="payment-row">
                 <div class="payment-label">Cheque:</div>
                 <div class="payment-value">{{ config('restaurant.currency.symbol') }}{{
-                    number_format($order->payment_cheque, 2) }}</div>
+                    number_format($order->payment_cheque, 0) }}</div>
             </div>
             @if(isset($order->cheque_number))
             <div class="payment-row">
@@ -345,20 +345,20 @@
             <div class="payment-row">
                 <div class="payment-label">Cash:</div>
                 <div class="payment-value">{{ config('restaurant.currency.symbol') }}{{
-                    number_format($order->payment_cash, 2) }}</div>
+                    number_format($order->payment_cash, 0) }}</div>
             </div>
             @endif
 
             <div class="payment-row">
                 <div class="payment-label">Cash Tendered:</div>
                 <div class="payment-value">{{ config('restaurant.currency.symbol') }}{{ number_format($order->payment,
-                    2) }}</div>
+                    0) }}</div>
             </div>
 
             <div class="payment-row">
                 <div class="payment-label">Change:</div>
                 <div class="payment-value">{{ config('restaurant.currency.symbol') }}{{
-                    number_format($order->change_amount, 2) }}</div>
+                    number_format($order->change_amount, 0) }}</div>
             </div>
             @endif
         </div>
