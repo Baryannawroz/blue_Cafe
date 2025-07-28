@@ -118,6 +118,10 @@
                     Save
                     <span class="shortcut-badge">F7</span>
                 </div>
+                <div class="btn btn-outline" role="button" @click="saveOrder(true)">
+                    print
+                    <span class="shortcut-badge">F7</span>
+                </div>
                 <div role="button" class="btn btn-primary" @click="handleOrderAction">
                     <span>✓</span> Save & Pay
                     <span class="shortcut-badge">F6</span>
@@ -693,7 +697,7 @@ export default {
 
 .actions-grid {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr  1fr 1fr;
     gap: 10px;
 }
 
