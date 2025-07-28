@@ -229,6 +229,7 @@ Route::middleware('active.user')->group(function () {
         Route::get('/edit-order/{id}', [OrderController::class, 'editOrder']);
         Route::post('/save-order', [OrderController::class, 'saveOrder']);
         Route::put('/update-order/{id}', [OrderController::class, 'updateOrder']);
+
         // Waiter Order
         Route::get('/order-served/{id}', [OrderController::class, 'orderServed']);
         // Order By Waiter
@@ -249,6 +250,7 @@ Route::middleware('active.user')->group(function () {
     Route::post('/post-admin-profile', [HomeController::class, 'adminProfileUpdate']);
     Route::post('/change-password', [HomeController::class, 'changePassword']);
 
+    Route::get('/table/deleteOrderId/{id}', [TableController::class, 'deleteOrderId']);
     Route::prefix('/web-api')->group(function () {
         Route::get('/tables', [TableController::class, 'getTables']);
         Route::get('/dishes', [DishController::class, 'getDishes']);

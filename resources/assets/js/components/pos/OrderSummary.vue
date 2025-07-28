@@ -31,7 +31,7 @@
 
         <div class="cart-header">
             <h3>Items</h3>
-            <button class="clear-cart-btn" @click="clearCart" v-if="carts.length > 0">
+            <button class="clear-cart-btn" @click="clearCart(true)" v-if="carts.length > 0">
                 Clear All
             </button>
         </div>

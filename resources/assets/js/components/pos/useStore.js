@@ -224,18 +224,40 @@ const createStore = () => {
             }
         },
 
-        clearCart() {
-            state.carts.value = [];
-            state.discountAmount.value = 0;
-            state.currentPaymentAmount.value = '';
-            actions.showToast("Cart cleared");
-        },
+        clearCart(clear=false) {
+
+if (clear) {
+
+    fetch(`/table/deleteOrderId/${state.selectedTable.value.id}`, {
+        method: 'GET',
+    })
+    .then(response => {
+    if (!response.ok) throw new Error('Failed to delete order');
+    return response.json();
+})
+.then(data => {
+    if (data.status === 'success') {
+        actions.showToast("Order deleted successfully");
+        // Optional: refresh table or update UI here
+    } else {
+        actions.showToast("Failed to delete order");
+    }
+})
+.catch(error => {
+    console.error(error);
+    actions.showToast("Error deleting table order");
+});
+}
+
+    state.carts.value = [];
+    state.discountAmount.value = 0;
+    state.currentPaymentAmount.value = '';
+    actions.showToast("Table order deleted");
+}
+,
 
         async saveOrder(shouldPrint = false,orderComplete =false) {
-            if (state.carts.value.length === 0) {
-                actions.showToast("Cannot save empty order", 3000);
-                return;
-            }
+
 const total = state.carts.value.reduce((sum, item) => {
   return sum + (item.price * item.quantity);
 }, 0);
@@ -256,6 +278,8 @@ const total = state.carts.value.reduce((sum, item) => {
                     gross_price: item.price * item.quantity,
                 }))
             };
+            console.log(orderData);
+
 
             try {
                 state.isLoading.value = true;

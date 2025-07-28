@@ -201,6 +201,7 @@ class OrderController extends Controller
             $order = Order::findOrFail($id);
             OrderDetails::where('order_id', $order->id)->delete();
             CookedProduct::where('order_id', $order->id)->delete();
+          
 
             $order->table_id = $request->table_id;
             $order->served_by = auth()->user()->id;;

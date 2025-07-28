@@ -72,6 +72,17 @@ class TableController extends Controller
             return response()->json('Ok', 200);
         }
     }
+    public function deleteOrderId($id)
+    {
+
+
+        // Set order_id to null for the given table
+        Table::where('id', $id)
+            ->update(['order_id' => null]);
+
+        return response()->json(['status' => 'success']);
+    }
+
 
     /**
      * Update table
