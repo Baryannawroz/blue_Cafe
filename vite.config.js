@@ -4,7 +4,7 @@ import laravel from 'laravel-vite-plugin';
 export default defineConfig({
   server: {
     host: '0.0.0.0', // expose to network
-        port:51743,
+    port: 5173,
     strictPort: true,
     cors: true,
     hmr: {
@@ -13,8 +13,8 @@ export default defineConfig({
   },
   plugins: [
     laravel({
-               input: ['resources/assets/js/app.js'],
-
+      input: ['resources/css/app.css', 'resources/js/app.js'],
       refresh: true,
     }),
   ],
+});
