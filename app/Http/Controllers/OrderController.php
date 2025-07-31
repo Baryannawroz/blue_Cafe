@@ -114,6 +114,8 @@ class OrderController extends Controller
                 $orderDetail = new OrderDetails();
                 $dishType = DishPrice::findOrFail($item['dish_type_id']);
                 $orderDetail->order_id = $order->id;
+                $orderDetail->note = $item['note'];
+                $orderDetail->discount = $item['discount'];
                 $orderDetail->dish_id = $item['dish_id'];
                 $orderDetail->dish_type_id = $item['dish_type_id'];
                 $orderDetail->quantity = $item['quantity'];
@@ -141,12 +143,10 @@ class OrderController extends Controller
             }
 
             return response()->json($order, 200);
-
         } catch (\Exception $exception) {
             DB::rollBack();
             throw $exception;
         }
-
     }
 
     /**
@@ -224,10 +224,12 @@ class OrderController extends Controller
                 $dishType = DishPrice::findOrFail($item['dish_type_id']);
                 $orderDetail->order_id = $order->id;
                 $orderDetail->dish_id = $item['dish_id'];
+                $orderDetail->discount = $item['discount'];
+                $orderDetail->note = $item['note'];
                 $orderDetail->dish_type_id = $item['dish_type_id'];
                 $orderDetail->quantity = $item['quantity'];
                 $orderDetail->net_price = $dishType->price;
-                $orderDetail->gross_price = $item['quantity'] * $dishType->price;
+                $orderDetail->gross_price = $item['quantity'] * ceil(($dishType->price - $dishType->price * $item['discount'] / 100) / 250) * 250;
                 if ($orderDetail->save()) {
                     foreach ($dishType->recipes as $recipe) {
                         $cookedProduct = new CookedProduct();
@@ -250,12 +252,10 @@ class OrderController extends Controller
             }
 
             return response()->json($order, 200);
-
         } catch (\Exception $exception) {
             DB::rollBack();
             throw $exception;
         }
-
     }
 
     /**
@@ -283,7 +283,6 @@ class OrderController extends Controller
         if ($order->save()) {
             return response()->json('Ok', 200);
         }
-
     }
 
     /**
@@ -300,7 +299,6 @@ class OrderController extends Controller
             broadcast(new OrderCancel('orderCancel'))->toOthers();
             return redirect()->back()->with('delete_success', 'The order has been deleted successfully');
         }
-
     }
 
     /**
@@ -346,7 +344,6 @@ class OrderController extends Controller
             Log::error("Broadcasting failed: " . $exception->getMessage());
         }
         return response()->json($orders);
-
     }
 
     /**
@@ -392,6 +389,4 @@ class OrderController extends Controller
             return response()->json('Ok', 200);
         }
     }
-
-
 }

@@ -3,11 +3,19 @@
     <div class="order-summary" id="order-summary">
         <div class="order-header">
             <div class="current-table">
-                <span id="current-table-display">Table:
-                <span v-if="selectedTable">{{ selectedTable.table_no }}</span>
-                <span v-else><i>No table selected</i></span>
+                <span id="current-table-display"
+                    >Table:
+                    <span v-if="selectedTable">{{
+                        selectedTable.table_no
+                    }}</span>
+                    <span v-else><i>No table selected</i></span>
                 </span>
-                <span class="change-table-btn" role="button" @click="tableList = !tableList">Change</span>
+                <span
+                    class="change-table-btn"
+                    role="button"
+                    @click="tableList = !tableList"
+                    >Change</span
+                >
             </div>
         </div>
 
@@ -15,14 +23,24 @@
         <div class="table-selection" v-if="tableList">
             <h3>Select Table</h3>
             <div class="table-grid">
-                <div class="table-item"
-                     v-for="(table, index) in tables" :key="`table-${index}`"
-                     :class="{'selected' : table?.id === selectedTable?.id}"
-                     @click="selectedTable = table; tableList = !tableList">
+                <div
+                    class="table-item"
+                    v-for="(table, index) in tables"
+                    :key="`table-${index}`"
+                    :class="{ selected: table?.id === selectedTable?.id }"
+                    @click="
+                        selectedTable = table;
+                        tableList = !tableList;
+                    "
+                >
                     <span class="status-indicator available"></span>
                     {{ table.table_no }}
                 </div>
-                <div class="table-item" @click="selectedTable = null" :class="{'selected' : selectedTable === null}">
+                <div
+                    class="table-item"
+                    @click="selectedTable = null"
+                    :class="{ selected: selectedTable === null }"
+                >
                     <span class="status-indicator available"></span>
                     No table
                 </div>
@@ -31,35 +49,92 @@
 
         <div class="cart-header">
             <h3>Items</h3>
-            <button class="clear-cart-btn" @click="clearCart(true)" v-if="carts.length > 0">
+            <button
+                class="clear-cart-btn"
+                @click="clearCart(true)"
+                v-if="carts.length > 0"
+            >
                 Clear All
             </button>
         </div>
 
         <div class="cart-items" ref="cartItemsRef">
-
-
             <div class="cart-empty" v-if="carts.length === 0">
                 <p>Your cart is empty</p>
-                <p style="font-size: 12px; margin-top: 8px;">Add items from the menu to get started</p>
+                <p style="font-size: 12px; margin-top: 8px">
+                    Add items from the menu to get started
+                </p>
             </div>
 
-            <div class="cart-item"
-                 v-for="(cart, index) in carts"
-                 :key="index"
-                 :class="{ 'cart-item-new': animatingItems[cart.cartItemId] }">
+            <div
+                class="cart-item"
+                v-for="(cart, index) in carts"
+                :key="index"
+                :class="{ 'cart-item-new': animatingItems[cart.cartItemId] }"
+            >
                 <div class="cart-item-details">
                     <div class="cart-item-name">{{ cart.name }}</div>
-   <!--        <div class="cart-item-variant">{{ cart.variantName }}</div> -->
-                    <div class="cart-item-price">{{ cart.price }}</div>
+                    <!--        <div class="cart-item-variant">{{ cart.variantName }}</div> -->
+                    <div
+                        class="cart-item-price"
+                        style="font-size: 12px; margin-top: 8px"
+                    >
+                        {{ cart.price }}
+                    </div>
+                    <div>
+                        <input
+                            type="text"
+                            v-model="cart.note"
+                            placeholder="Add note (optional)"
+                            class="border px-2 py-1 rounded w-90"
+                        />
+                    </div>
+                    <div class="p" style="font-size: 12px; margin-top: 8px"> <span style="padding-right: 4px;">Discount</span>
+                        <input
+                            type="number"
+                            v-model="cart.discount"
+                            placeholder="discount"
+                            class="border px-2 py-1 rounded"
+                        />
+                        <span>{{
+                            Math.ceil(
+                                (cart.price -
+                                    (cart.price * cart.discount) / 100) /
+                                    250
+                            ) * 250
+                        }}</span>
+                    </div>
                 </div>
                 <div class="cart-item-actions">
-                    <button class="quantity-btn" @click="updateCartItemQuantity(cart.cartItemId, cart.quantity - 1)">-
+                    <button
+                        class="quantity-btn"
+                        @click="
+                            updateCartItemQuantity(
+                                cart.cartItemId,
+                                cart.quantity - 1
+                            )
+                        "
+                    >
+                        -
                     </button>
                     <span class="item-quantity">{{ cart.quantity }}</span>
-                    <button class="quantity-btn" @click="updateCartItemQuantity(cart.cartItemId, cart.quantity + 1)">+
+                    <button
+                        class="quantity-btn"
+                        @click="
+                            updateCartItemQuantity(
+                                cart.cartItemId,
+                                cart.quantity + 1
+                            )
+                        "
+                    >
+                        +
                     </button>
-                    <button class="remove-btn" @click="deleteProductFromCart(cart.cartItemId)">×</button>
+                    <button
+                        class="remove-btn"
+                        @click="deleteProductFromCart(cart.cartItemId)"
+                    >
+                        ×
+                    </button>
                 </div>
             </div>
         </div>
@@ -81,11 +156,13 @@
                     <span
                         :class="{ active: discountType === 'percentage' }"
                         @click="discountType = 'percentage'"
-                    >%</span>
+                        >%</span
+                    >
                     <span
                         :class="{ active: discountType === 'fixed' }"
                         @click="discountType = 'fixed'"
-                    >{{ config.currency.symbol }}</span>
+                        >{{ config.currency.symbol }}</span
+                    >
                 </div>
                 <button class="apply-btn" @click="applyDiscount">Apply</button>
             </div>
@@ -94,20 +171,29 @@
         <div class="order-totals">
             <div class="total-row">
                 <span>Subtotal</span>
-                <span>{{ config.currency.symbol }}{{ parseFloat(subTotal).toFixed(2) }}</span>
+                <span
+                    >{{ config.currency.symbol
+                    }}{{ parseFloat(subTotal).toFixed(2) }}</span
+                >
             </div>
             <div class="total-row" v-if="discountAmount > 0">
                 <span>Discount</span>
-                <span>-{{ config.currency.symbol }}{{ discountAmount.toFixed(2) }}</span>
+                <span
+                    >-{{ config.currency.symbol
+                    }}{{ discountAmount.toFixed(2) }}</span
+                >
             </div>
             <div class="total-row">
                 <span>Tax ({{ config.vat.vat_percentage }}%)</span>
-                <span>{{ config.currency.symbol }}{{ taxAmount.toFixed(2) }}</span>
+                <span
+                    >{{ config.currency.symbol
+                    }}{{ taxAmount.toFixed(2) }}</span
+                >
             </div>
             <div class="total-row final">
                 <span>Total</span>
                 <span :class="{ 'animate-balance': isBalanceAnimating }">
-                    {{ config.currency.symbol }}{{ finalTotal.toFixed(2) }}
+                    {{ config.currency.symbol }}{{ finalTotal.toFixed(0) }}
                 </span>
             </div>
         </div>
@@ -118,11 +204,19 @@
                     Save
                     <span class="shortcut-badge">F7</span>
                 </div>
-                <div class="btn btn-outline" role="button" @click="saveOrder(true)">
+                <div
+                    class="btn btn-outline"
+                    role="button"
+                    @click="saveOrder(true)"
+                >
                     print
                     <span class="shortcut-badge">F7</span>
                 </div>
-                <div role="button" class="btn btn-primary" @click="handleOrderAction">
+                <div
+                    role="button"
+                    class="btn btn-primary"
+                    @click="handleOrderAction"
+                >
                     <span>✓</span> Save & Pay
                     <span class="shortcut-badge">F6</span>
                 </div>
@@ -131,17 +225,35 @@
 
         <!-- Payment Modal -->
         <div class="payment-modal" v-if="isOrderModalVisible">
-            <div class="modal-overlay" @click="isOrderModalVisible = false"></div>
+            <div
+                class="modal-overlay"
+                @click="isOrderModalVisible = false"
+            ></div>
             <div class="modal-content">
-                <div class=""
-                     style="display: flex; align-items: center; justify-content: space-between; padding: 5px 15px; border-bottom: 1px solid #e4e4e4;">
+                <div
+                    class=""
+                    style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        padding: 5px 15px;
+                        border-bottom: 1px solid #e4e4e4;
+                    "
+                >
                     <h3>Payment</h3>
-                    <button class="close-btn" @click="isOrderModalVisible = false">×</button>
+                    <button
+                        class="close-btn"
+                        @click="isOrderModalVisible = false"
+                    >
+                        ×
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="payment-summary">
                         <div class="summary-row">
-                            <div class="summary-label"><strong>Total amount:</strong></div>
+                            <div class="summary-label">
+                                <strong>Total amount:</strong>
+                            </div>
                             <div class="summary-value">
                                 <strong>
                                     {{ config.currency.symbol }}
@@ -151,11 +263,17 @@
                         </div>
                         <div class="summary-row" v-if="discountAmount > 0">
                             <div class="summary-label">Total discount:</div>
-                            <div class="summary-value">{{ config.currency.symbol }}{{ discountAmount.toFixed(2) }}</div>
+                            <div class="summary-value">
+                                {{ config.currency.symbol
+                                }}{{ discountAmount.toFixed(2) }}
+                            </div>
                         </div>
                         <div class="summary-row">
                             <div class="summary-label">Total tax amount:</div>
-                            <div class="summary-value">{{ config.currency.symbol }}{{ taxAmount.toFixed(0) }}</div>
+                            <div class="summary-value">
+                                {{ config.currency.symbol
+                                }}{{ taxAmount.toFixed(0) }}
+                            </div>
                         </div>
                         <div class="summary-row total">
                             <div class="summary-label">
@@ -168,25 +286,37 @@
                                 </strong>
                             </div>
                         </div>
-                        <div class="summary-row balance"
-                             :class="{ 'positive': remainingBalance > 0, 'negative': remainingBalance < 0 }">
-                            <div class="summary-label"><strong>Due / Change: </strong></div>
+                        <div
+                            class="summary-row balance"
+                            :class="{
+                                positive: remainingBalance > 0,
+                                negative: remainingBalance < 0,
+                            }"
+                        >
+                            <div class="summary-label">
+                                <strong>Due / Change: </strong>
+                            </div>
                             <div class="summary-value">
                                 <strong>
                                     {{ config.currency.symbol }}
-                                    {{ parseFloat(finalTotal - currentPaymentAmount).toFixed(2) }}
+                                    {{
+                                        parseFloat(
+                                            finalTotal - currentPaymentAmount
+                                        ).toFixed(2)
+                                    }}
                                 </strong>
                             </div>
                         </div>
                     </div>
-
 
                     <!-- Add Payment -->
                     <div class="add-payment hidden">
                         <h4>Add Payment</h4>
                         <div class="payment-input">
                             <div class="input-group">
-                                <span class="currency-symbol">{{ config.currency.symbol }}  </span>
+                                <span class="currency-symbol"
+                                    >{{ config.currency.symbol }}
+                                </span>
                                 <input
                                     autofocus
                                     @keydown.enter="saveOrder(true)"
@@ -197,30 +327,36 @@
                                 />
                             </div>
                         </div>
-
                     </div>
 
                     <!-- Complete Order Button -->
                     <div class="model-footer">
-                        <div style="display: flex; gap: 15px; width: 100%;">
-                            <button class="btn btn-outline" @click="saveOrder(false,true)" role="button">
+                        <div style="display: flex; gap: 15px; width: 100%">
+                            <button
+                                class="btn btn-outline"
+                                @click="saveOrder(false, true)"
+                                role="button"
+                            >
                                 Complete Order
                             </button>
-                            <button class="btn btn-success btn-block" @click="saveOrder(true,true)" role="button">
+                            <button
+                                class="btn btn-success btn-block"
+                                @click="saveOrder(true, true)"
+                                role="button"
+                            >
                                 Complete & Print Order
                             </button>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import useStore from './useStore';
-import {ref, computed, watch, nextTick, onMounted, onUnmounted} from "vue";
+import useStore from "./useStore";
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from "vue";
 
 // Initialize store
 const {
@@ -237,11 +373,11 @@ const {
     updateCartItemQuantity,
     config,
     clearCart,
-    saveOrder
+    saveOrder,
 } = useStore();
 
 const tableList = ref(false);
-const discountType = ref('percentage'); // 'percentage' or 'fixed'
+const discountType = ref("percentage"); // 'percentage' or 'fixed'
 const discountValue = ref(0);
 const appliedDiscount = ref(0);
 const isSaved = ref(false);
@@ -251,9 +387,7 @@ const isBalanceAnimating = ref(false);
 const showClearConfirm = ref(false);
 const remainingBalance = ref(0);
 
-
 const payments = ref([]);
-
 
 // Compute the action button text
 const orderActionText = computed(() => {
@@ -264,12 +398,15 @@ const orderActionText = computed(() => {
 const applyDiscount = () => {
     const previousTotal = finalTotal.value;
 
-    if (discountType.value === 'percentage') {
+    if (discountType.value === "percentage") {
         const percentage = Math.min(parseFloat(discountValue.value) || 0, 100);
-        discountAmount.value = (subTotal.value * percentage / 100);
+        discountAmount.value = Math.floor((subTotal.value * percentage) / 100/250)*250;
         appliedDiscount.value = percentage;
     } else {
-        const amount = Math.min(parseFloat(discountValue.value) || 0, subTotal.value);
+        const amount = Math.min(
+            parseFloat(discountValue.value) || 0,
+            subTotal.value
+        );
         discountAmount.value = amount;
         appliedDiscount.value = amount;
     }
@@ -295,12 +432,12 @@ const handleOrderAction = () => {
 // Function to handle keyboard shortcuts
 const handleKeyboardShortcut = (event) => {
     // F2 key for payment (F1 is usually help, so we avoid that)
-    if (event.key === 'F6') {
+    if (event.key === "F6") {
         handleOrderAction();
         event.preventDefault(); // Prevent default browser action
     }
 
-    if (event.key === 'F7') {
+    if (event.key === "F7") {
         saveOrder();
         event.preventDefault();
     }
@@ -308,12 +445,12 @@ const handleKeyboardShortcut = (event) => {
 
 // Set up keyboard event listeners when component is mounted
 onMounted(() => {
-    window.addEventListener('keydown', handleKeyboardShortcut);
+    window.addEventListener("keydown", handleKeyboardShortcut);
 });
 
 // Clean up event listeners when component is unmounted
 onUnmounted(() => {
-    window.removeEventListener('keydown', handleKeyboardShortcut);
+    window.removeEventListener("keydown", handleKeyboardShortcut);
 });
 
 // Auto-scroll cart items to bottom when items are added or modified
@@ -343,45 +480,51 @@ const animateBalance = () => {
 
 // Watch for changes in the cart and handle animations and scrolling
 const previousCartLength = ref(carts.value.length);
-watch(() => [...carts.value], (newCart, oldCart) => {
-    // Check if cart length increased (new item added)
-    if (newCart.length > previousCartLength.value) {
-        // Get the last item (newly added)
-        const newItem = newCart[newCart.length - 1];
-        animateNewCartItem(newItem.cartItemId);
-        animateBalance();
-    } else if (newCart.length !== oldCart.length ||
-        JSON.stringify(newCart) !== JSON.stringify(oldCart)) {
-        // Cart item was removed or quantities changed
-        animateBalance();
-    }
+watch(
+    () => [...carts.value],
+    (newCart, oldCart) => {
+        // Check if cart length increased (new item added)
+        if (newCart.length > previousCartLength.value) {
+            // Get the last item (newly added)
+            const newItem = newCart[newCart.length - 1];
+            animateNewCartItem(newItem.cartItemId);
+            animateBalance();
+        } else if (
+            newCart.length !== oldCart.length ||
+            JSON.stringify(newCart) !== JSON.stringify(oldCart)
+        ) {
+            // Cart item was removed or quantities changed
+            animateBalance();
+        }
 
-    previousCartLength.value = newCart.length;
-    scrollToBottom();
-}, {deep: true});
+        previousCartLength.value = newCart.length;
+        scrollToBottom();
+    },
+    { deep: true }
+);
 </script>
 <script>
 export default {
-  props: {
-    subTotal: {
-      type: Number,
-      required: true,
+    props: {
+        subTotal: {
+            type: Number,
+            required: true,
+        },
+        remainingBalance: {
+            type: Number,
+            required: true,
+        },
     },
-    remainingBalance: {
-      type: Number,
-      required: true,
-    }
-  },
-  data() {
-    return {
-      currentPaymentAmount: this.subTotal // Initialize from prop
-    };
-  },
-  methods: {
-    saveOrder(confirm) {
-      // your save logic
-    }
-  }
+    data() {
+        return {
+            currentPaymentAmount: this.subTotal, // Initialize from prop
+        };
+    },
+    methods: {
+        saveOrder(confirm) {
+            // your save logic
+        },
+    },
 };
 </script>
 
@@ -389,7 +532,7 @@ export default {
 /* Order Summary */
 .order-summary {
     width: 100% !important;
-    max-width:500px;
+    max-width: 500px;
     background-color: white;
     border-left: 1px solid #e0e0e0;
     display: flex;
@@ -697,7 +840,7 @@ export default {
 
 .actions-grid {
     display: grid;
-    grid-template-columns: 1fr  1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 10px;
 }
 
@@ -970,5 +1113,8 @@ export default {
     bottom: 0;
     background-color: white;
     z-index: 2;
+}
+.w-90 {
+    width: 90%;
 }
 </style>

@@ -45,7 +45,7 @@ const createStore = () => {
     const getters = {
         subTotal: computed(() => {
             return state.carts.value.reduce((total, item) => {
-                return total + (item.price * item.quantity);
+                return total + (Math.ceil((item.price - item.price * item.discount / 100) / 250) * 250 * item.quantity);
             }, 0);
         }),
 
@@ -144,6 +144,8 @@ const createStore = () => {
                     variantName: item.dish_type?.dish_type,
                     price: item.dish_type?.price,
                     quantity: item.quantity,
+                    note: item.note,
+                    discount: item.discount,
                     image: item.dish?.thumbnail
                 }));
 
@@ -154,6 +156,7 @@ const createStore = () => {
                 }
 
                 state.discountAmount.value = response.data.discount || 0;
+
             } catch (err) {
                 console.error('Error fetching order details:', err);
                 actions.showToast("Failed to load order details", 3000);
@@ -199,7 +202,10 @@ const createStore = () => {
                     variantName: variant.dish_type,
                     price: variant.price,
                     quantity: 1,
-                    image: product.thumbnail
+                    image: product.thumbnail,
+                    note: ``,
+                    discount:0,
+
                 });
             }
             actions.showToast(`${product.dish} added to cart`);
@@ -275,6 +281,8 @@ const total = state.carts.value.reduce((sum, item) => {
                     dish_type_id: item.variantId,
                     quantity: item.quantity,
                     net_price: item.price,
+                    note: item.note,
+                    discount: item.discount,
                     gross_price: item.price * item.quantity,
                 }))
             };

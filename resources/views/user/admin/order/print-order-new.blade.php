@@ -273,8 +273,15 @@
                     </td>
                     <td class="qty">{{ $orderDetails->quantity }}</td>
                     <td class="rate">{{ number_format($orderDetails->net_price, 0) }}</td>
-                    <td class="amount">{{ number_format($orderDetails->net_price * $orderDetails->quantity, 0) }}</td>
+                    <td class="amount">{{ number_format(ceil(($orderDetails->net_price - $orderDetails->net_price *
+                        $orderDetails->discount /100)/250 )*250 * $orderDetails->quantity, 0) }}</td>
                 </tr>
+                @if ($orderDetails->note)
+                <tr>
+                    <td colspan="5" class="note">{{ $orderDetails->note }}</td>
+                </tr>
+
+                @endif
                 @endforeach
             </tbody>
         </table>
@@ -287,11 +294,11 @@
                     number_format($order->orderPrice->sum('gross_price'), 0) }}</div>
             </div>
 
-            @if($order->discount_amount > 0)
+            @if($order->discount > 0)
             <div class="total-row">
                 <div class="total-label">Discount:</div>
                 <div class="total-value">
-                    -{{ config('restaurant.currency.symbol') }}{{ number_format($order->discount_amount, 0) }}</div>
+                    -{{ config('restaurant.currency.symbol') }}{{ number_format($order->discount, 0) }}</div>
             </div>
             @endif
 
@@ -304,7 +311,7 @@
                 <div class="total-label">TOTAL:</div>
                 <div class="total-value">{{ config('restaurant.currency.symbol') }}{{
                     number_format($order->orderPrice->sum('gross_price')+($order->orderPrice->sum('gross_price')*$order->vat)/100
-                    - $order->discount_amount, 0) }}</div>
+                    - $order->discount, 0) }}</div>
             </div>
         </div>
 
@@ -373,7 +380,7 @@
     </div>
 
     <script>
-            window.print();
+        window.print();
             window.close();
     </script>
 </body>
