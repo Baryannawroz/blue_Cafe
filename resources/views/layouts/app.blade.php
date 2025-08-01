@@ -12,7 +12,7 @@
 
 
     {{--include css--}}
-    @vite('resources/assets/js/app.js')
+    @vite(['resources/assets/js/app.js'])
     @include('assets.css')
     @yield('extra-css')
 </head>
@@ -54,6 +54,8 @@
         </div>
         @endguest
 
+        {{-- Vue App Container --}}
+        <div id="vueApp"></div>
 
         {{--include js--}}
         @include('assets.js')
