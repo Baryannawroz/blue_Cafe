@@ -150,8 +150,8 @@ const createStore = () => {
                 }));
 
                 state.carts.value = order;
+                alert(response.data.table_id)
                 if (response.data?.table_id && state.tables.value.length > 0) {
-                    alert(response.data.table_id)
                     state.selectedTable.value = state.tables.value.find(el => el.id == response.data.table_id) || null;
                 }
 
