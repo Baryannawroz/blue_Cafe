@@ -150,7 +150,6 @@ const createStore = () => {
                 }));
 
                 state.carts.value = order;
-                alert(state.tables.value.length)
                 if (response.data?.table_id && state.tables.value.length > 0) {
                     state.selectedTable.value = state.tables.value.find(el => el.id == response.data.table_id) || null;
                 }
