@@ -12,7 +12,7 @@
 
 
     
-    <?php echo app('Illuminate\Foundation\Vite')('resources/assets/js/app.js'); ?>
+    
     <?php echo $__env->make('assets.css', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     <?php echo $__env->yieldContent('extra-css'); ?>
 </head>
