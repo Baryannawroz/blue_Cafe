@@ -2,17 +2,19 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 
 export default defineConfig({
-  server: {
-    host: '0.0.0.0', // expose to LAN/public IP
+server: {
+  host: '0.0.0.0',
+  port: 5173,
+  strictPort: true,
+  https: true, // Enable HTTPS on dev server
+  cors: true,
+  hmr: {
+    protocol: 'wss', // use secure websocket for HMR over HTTPS
+    host: 'bluecafe.malaygawra.com',
     port: 5173,
-    strictPort: true,
-    cors: true,
-    hmr: {
-      protocol: 'ws', // or 'wss' if you're using HTTPS in dev
-      host: 'bluecafe.malaygawra.com',
-      port: 5173,
-    },
   },
+},
+
   plugins: [
     laravel({
       input: ['resources/css/app.css', 'resources/js/app.js'],
