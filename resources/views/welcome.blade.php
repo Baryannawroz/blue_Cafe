@@ -272,20 +272,6 @@
                     </li>
                 @endforeach
 
-                @if (Route::has('login'))
-                    <li class="nav-item ms-2">
-                        @if (Auth::check())
-                            <a href="{{url('/home')}}" class="btn btn-primary">Home</a>
-                        @else
-                            <a href="{{route('login')}}" class="btn btn-primary">Login</a>
-                            @if(!\App\Models\User::first())
-                                <a href="{{route('register')}}" class="btn btn-primary">Join</a>
-                            @endif
-                        @endif
-
-                    </li>
-                @endif
-
             </ul>
         </div>
     </div>
@@ -325,6 +311,8 @@
 
         // Filter menu items
         menuItems.forEach(item => {
+            console.log(item);
+
             const itemCategory = item.getAttribute('data-category');
 
             if (categoryId === 'all' || itemCategory == categoryId) {

@@ -1,78 +1,65 @@
 @php
-    $categories = \App\Models\DishCategory::where('status',1)->get();
-    $dishes = \App\Models\Dish::where('status', 1)->get();
+$categories = \App\Models\DishCategory::where('status',1)->get();
+$dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
 @endphp
 
-    <!-- Menu Section -->
+<!-- Menu Section -->
 <section class="py-5" id="menu">
     <div class="container">
         <h2 class="text-center section-title">Our Delicious Menu</h2>
 
         <!-- Menu Categories -->
         <div class="d-flex flex-wrap justify-content-center mb-4">
-            <button
-                class="btn category-tab active"
-                data-category-id="all"
-                onclick="filterDishes('all')"
-            >
+            <button class="btn category-tab active" data-category-id="all" onclick="filterDishes('all')">
                 All Dishes
             </button>
             @foreach($categories as $category)
-                <button
-                    class="btn category-tab"
-                    data-category-id="{{ $category->id }}"
-                    onclick="filterDishes({{ $category->id }})"
-                >
-                    {{ $category->name }}
-                </button>
+            <button class="btn category-tab" data-category-id="{{ $category->id }}"
+                onclick="filterDishes({{ $category->id }})">
+                {{ $category->name }}
+            </button>
             @endforeach
         </div>
 
         <!-- Menu Items -->
         <div class="row" id="menu-items-container">
             @foreach($dishes as $dish)
-                <div class="col-lg-4 mb-4 menu-item" data-category="{{ $dish->category_id ?? 'uncategorized' }}" data-dish-id="{{ $dish->id }}">
-                    <div class="card menu-card h-100">
-                        <div class="position-relative">
-                            <img
-                                src="{{ $dish->thumbnail }}"
-                                class="card-img-top menu-img"
-                                alt="{{ $dish->dish }}"
-                            />
-                            @if($dish->category_id && ($category = \App\Models\DishCategory::find($dish->category_id)))
-                                <span class="menu-badge bg-custom-primary">{{ $category->name }}</span>
-                            @endif
-                        </div>
-                        <div class="card-body">
-                            <h4 class="card-title">{{ $dish->dish }}</h4>
-                            <div class="mt-3">
-                                <div class="portion-options">
-                                    <div class="d-flex flex-column gap-2">
-                                        @foreach($dish->dishPrices as $price)
-                                            <div class="portion-option p-2 border rounded bg-light">
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <span class="fw-bold">{{ $price->dish_type }}</span>
-                                                    <span class="badge bg-custom-primary">{{ $price->price }}</span>
-                                                </div>
-                                            </div>
-                                        @endforeach
+            <div class="col-lg-4 mb-4 menu-item" data-category="{{ $dish->category_id ?? 'uncategorized' }}"
+                data-dish-id="{{ $dish->id }}">
+                <div class="card menu-card h-100">
+                    <div class="position-relative">
+                        <img src="{{ $dish->thumbnail }}" class="card-img-top menu-img" alt="{{ $dish->dish }}" />
+                        @if($dish->category_id && ($category = \App\Models\DishCategory::find($dish->category_id)))
+                        <span class="menu-badge bg-custom-primary">{{ $category->name }}</span>
+                        @endif
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">{{ $dish->dish }}</h4>
+                        <div class="mt-3">
+                            <div class="portion-options">
+                                <div class="d-flex flex-column gap-2">
+                                    @foreach($dish->dishPrices as $price)
+                                    <div class="portion-option p-2 border rounded bg-light">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-bold">{{ $price->dish_type }}</span>
+                                            <span class="badge bg-custom-primary">{{ $price->price }}</span>
+                                        </div>
                                     </div>
+                                    @endforeach
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Hidden div to store dish images -->
-                            <div class="dish-images-data" style="display: none;">
-                                @foreach($dish->dishImages as $image)
-                                    <div
-                                        class="dish-image-item"
-                                        data-image="{{ $image->image }}"
-                                        data-title="{{ $image->title }}"
-                                    ></div>
-                                @endforeach
-                            </div>
+                        <!-- Hidden div to store dish images -->
+                        <div class="dish-images-data" style="display: none;">
+                            @foreach($dish->dishImages as $image)
+                            <div class="dish-image-item" data-image="{{ $image->image }}"
+                                data-title="{{ $image->title }}"></div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
+            </div>
             @endforeach
         </div>
 
@@ -90,29 +77,31 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header"
-                 style="background-color: #FF6B6B; color: #fff; position: relative; padding: 15px 20px;">
+                style="background-color: #FF6B6B; color: #fff; position: relative; padding: 15px 20px;">
                 <h5 class="modal-title" id="dishModalLabel" style="font-weight: 600; font-size: 22px;">Dish
                     Details</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 20px;">
                 <div class="row">
                     <div class="col-md-6">
                         <!-- Main dish image -->
                         <img src="" id="dishMainImage" class="img-fluid rounded mb-4 w-100" alt="Dish Image"
-                             style="height: 300px; object-fit: cover;">
+                            style="height: 300px; object-fit: cover;">
 
                         <!-- Dish options with clear styling -->
                         <div class="dish-options-container mb-4">
-                            <h5 style="color: #333; font-weight: 600; margin-bottom: 12px; border-left: 4px solid #FF6B6B; padding-left: 10px;">
+                            <h5
+                                style="color: #333; font-weight: 600; margin-bottom: 12px; border-left: 4px solid #FF6B6B; padding-left: 10px;">
                                 Portion Options</h5>
                             <div class="dish-options"></div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <!-- More photos -->
-                        <h5 style="color: #333; font-weight: 600; margin-bottom: 12px; border-left: 4px solid #FF6B6B; padding-left: 10px;">
+                        <h5
+                            style="color: #333; font-weight: 600; margin-bottom: 12px; border-left: 4px solid #FF6B6B; padding-left: 10px;">
                             More Photos</h5>
                         <div class="dish-gallery row g-2"></div>
                     </div>
@@ -120,7 +109,7 @@
             </div>
             <div class="modal-footer" style="border-top: 1px solid #eee; padding: 15px;">
                 <button type="button" class="btn" data-bs-dismiss="modal"
-                        style="background-color: #4ECDC4; color: white; padding: 8px 24px; border-radius: 30px; font-weight: 500;">
+                    style="background-color: #4ECDC4; color: white; padding: 8px 24px; border-radius: 30px; font-weight: 500;">
                     Close
                 </button>
             </div>
