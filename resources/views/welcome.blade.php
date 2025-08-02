@@ -1,19 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>{{ config('app.name')  }} - A Culinary Adventure</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ config('app.name') }} - A Culinary Adventure</title>
     <!-- Bootstrap 5 CSS -->
-    <link
-        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
-        rel="stylesheet"
-    />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Bootstrap Icons -->
-    <link
-        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css"
-        rel="stylesheet"
-    />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css"
+        rel="stylesheet" />
     <style>
         :root {
             --primary-color: #FF6B6B;
@@ -248,48 +244,44 @@
         }
     </style>
 </head>
+
 <body>
-<!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-custom-dark sticky-top">
-    <div class="container">
-        <a class="navbar-brand" href="#">
-            <i class="bi bi-egg-fried text-custom-primary"></i>
-            <span class="text-custom-primary">{{ config('app.name')  }}</span>
-        </a>
-        <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-        >
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                @foreach($menus as $menu)
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-custom-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-egg-fried text-custom-primary"></i>
+                <span class="text-custom-primary">{{ config('app.name') }}</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    @foreach($menus as $menu)
                     <li class="nav-item">
                         <a class="nav-link" href="#{{$menu->section_id}}">{{$menu->name}}</a>
                     </li>
-                @endforeach
+                    @endforeach
 
-            </ul>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-@foreach($webPages as $section)
+    @foreach($webPages as $section)
     @if($section->section_id == 'menu' || \Illuminate\Support\Str::contains($section->content, 'id="menus"'))
-        @include('menus')
+    @include('menus')
     @else
     {!! $section->content !!}
     @endif
-@endforeach
+    @endforeach
 
 
-<!-- Bootstrap JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-<script>
-    function filterDishes(categoryId) {
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function filterDishes(categoryId) {
         // Get all menu items and category tabs
         const menuItems = document.querySelectorAll('.menu-item');
         const categoryTabs = document.querySelectorAll('.category-tab');
@@ -357,6 +349,7 @@
             }, 50 * index);
         });
     });
-</script>
+    </script>
 </body>
+
 </html>
