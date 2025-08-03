@@ -335,7 +335,7 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
     }
 
     .menu-item-simple .price {
-        color: #FF6B6B;
+        color: #007bff;
         font-weight: 700;
         font-size: 1rem;
         margin-top: 4px;
@@ -349,6 +349,7 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
 
         .menu-item-simple .price {
             font-size: 0.9rem;
+            color: #007bff;
         }
 
         .menu-item-simple {
@@ -383,5 +384,30 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
         color: white;
         padding: 15px;
         border-radius: 8px;
+    }
+
+    /* Category tabs styling */
+ 
+
+    .category-tab:hover {
+        background: #007bff;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    }
+
+    .category-tab.active {
+        background: #007bff;
+        color: white;
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    }
+
+    /* Blue Cafe text color */
+    .navbar-brand .text-custom-primary {
+        color: #007bff !important;
+    }
+
+    .text-custom-primary {
+        color: #007bff !important;
     }
 </style>
