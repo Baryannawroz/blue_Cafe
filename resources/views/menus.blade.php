@@ -24,39 +24,30 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
         <!-- Menu Items -->
         <div class="row" id="menu-items-container">
             @foreach($dishes as $dish)
-            <div class="col-lg-4 mb-4 menu-item" data-category="{{ $dish->category_id ?? 'uncategorized' }}"
-                data-dish-id="{{ $dish->id }}">
-                <div class="card menu-card h-100">
-                    <div class="position-relative">
-                        <img src="{{ $dish->thumbnail }}" class="card-img-top menu-img" alt="{{ $dish->dish }}" />
-                        @if($dish->category_id && ($category = \App\Models\DishCategory::find($dish->category_id)))
-                        <span class="menu-badge bg-custom-primary">{{ $category->name }}</span>
-                        @endif
-                    </div>
-                    <div class="card-body">
-                        <h4 class="card-title">{{ $dish->dish }}</h4>
-                        <div class="mt-3">
-                            <div class="portion-options">
-                                <div class="d-flex flex-column gap-2">
-                                    @foreach($dish->dishPrices as $price)
-                                    <div class="portion-option p-2 border rounded bg-light">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span class="fw-bold">{{ $price->dish_type }}</span>
-                                            <span class="badge bg-custom-primary">{{ $price->price }}</span>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
+            <div class="col-lg-4 col-md-6 col-6 mb-4 menu-item"
+                data-category="{{ $dish->category_id ?? 'uncategorized' }}" data-dish-id="{{ $dish->id }}">
+                <div class="menu-item-simple text-center">
+                    <a href="{{ $dish->thumbnail }}" class="glightbox">
+                        <img src="{{ $dish->thumbnail }}"
+                            style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px;" loading="lazy"
+                            class="menu-img img-fluid" alt="{{ $dish->dish }}">
+                    </a>
+                    <h5 class="mt-2 mb-1">{{ $dish->dish }}</h5>
+                    @if($dish->dishPrices->count() > 0)
+                    @php
+                    $Price = $dish->dishPrices->min('price');
+                    @endphp
+                    <p class="price mb-0">
+                        {{ number_format($Price, 0) }}
+                    </p>
+                    @endif
 
-                        <!-- Hidden div to store dish images -->
-                        <div class="dish-images-data" style="display: none;">
-                            @foreach($dish->dishImages as $image)
-                            <div class="dish-image-item" data-image="{{ $image->image }}"
-                                data-title="{{ $image->title }}"></div>
-                            @endforeach
+                    <!-- Hidden div to store dish images for modal -->
+                    <div class="dish-images-data" style="display: none;">
+                        @foreach($dish->dishImages as $image)
+                        <div class="dish-image-item" data-image="{{ $image->image }}" data-title="{{ $image->title }}">
                         </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -151,21 +142,34 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
     }
 
     document.addEventListener('DOMContentLoaded', function () {
+        // Initialize GLightbox
+        const lightbox = GLightbox({
+            selector: '.glightbox',
+            touchNavigation: true,
+            loop: true,
+            autoplayVideos: true
+        });
+
         // Get all menu items
-        const menuItems = document.querySelectorAll('.menu-card');
+        const menuItems = document.querySelectorAll('.menu-item-simple');
 
         // Add click event to each menu item
         menuItems.forEach(item => {
-            item.addEventListener('click', function () {
+            item.addEventListener('click', function (e) {
+                // Don't trigger modal if clicking on the image (let GLightbox handle it)
+                if (e.target.closest('.glightbox')) {
+                    return;
+                }
+
                 // Get parent container with dish ID
                 const menuItemContainer = this.closest('[data-dish-id]');
                 const dishId = menuItemContainer ? menuItemContainer.dataset.dishId : null;
 
-                // Get dish information from the clicked card
-                const dishName = this.querySelector('.card-title').textContent;
+                // Get dish information from the clicked item
+                const dishName = this.querySelector('h5').textContent;
                 const dishImage = this.querySelector('.menu-img')?.src || this.querySelector('img')?.src;
 
-                // Get dish price options
+                // Get dish price options (we'll need to fetch this from the server or store it differently)
                 const dishOptions = this.querySelectorAll('.portion-option') || [];
 
                 // Find the modal elements
@@ -184,91 +188,22 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
                 modalOptions.innerHTML = '';
                 modalGallery.innerHTML = '';
 
-                // Add dish options to modal with improved styling
-                if (dishOptions.length > 0) {
-                    const optionsList = document.createElement('div');
-                    optionsList.className = 'd-flex flex-column gap-2';
+                // Since we simplified the display, we'll show a simple message about pricing
+                const optionsList = document.createElement('div');
+                optionsList.className = 'd-flex flex-column gap-2';
 
-                    dishOptions.forEach(option => {
-                        const optionClone = option.cloneNode(true);
-                        // Ensure text visibility
-                        const nameElement = optionClone.querySelector('.fw-bold');
-                        const priceElement = optionClone.querySelector('.badge');
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'p-3 bg-light rounded';
+                infoDiv.style.border = '1px solid #dee2e6';
+                infoDiv.innerHTML = `
+                    <div class="text-center">
+                        <i class="bi bi-info-circle text-primary mb-2" style="font-size: 2rem;"></i>
+                        <h6 class="mb-2">Dish Information</h6>
+                        <p class="mb-0 text-muted">Click on the image to view larger version. Contact us for detailed pricing options.</p>
+                    </div>
+                `;
 
-                        if (nameElement) nameElement.style.color = '#333';
-                        if (priceElement) {
-                            priceElement.style.backgroundColor = '#FF6B6B';
-                            priceElement.style.color = '#fff';
-                            priceElement.style.fontWeight = '600';
-                            priceElement.style.padding = '6px 12px';
-                        }
-
-                        optionClone.style.backgroundColor = '#f8f9fa';
-                        optionClone.style.border = '1px solid #dee2e6';
-                        optionClone.style.borderRadius = '8px';
-                        optionClone.style.padding = '10px 15px';
-
-                        optionsList.appendChild(optionClone);
-                    });
-
-                    modalOptions.appendChild(optionsList);
-                } else {
-                    // If no options found in modern format, create new buttons with clear styling
-                    const selectElement = this.querySelector('.portion-select');
-                    if (selectElement) {
-                        const options = Array.from(selectElement.options);
-
-                        const optionsList = document.createElement('div');
-                        optionsList.className = 'd-flex flex-column gap-2';
-
-                        options.forEach(option => {
-                            const optionDiv = document.createElement('div');
-                            optionDiv.className = 'portion-option';
-                            optionDiv.style.backgroundColor = '#f8f9fa';
-                            optionDiv.style.border = '1px solid #dee2e6';
-                            optionDiv.style.borderRadius = '8px';
-                            optionDiv.style.padding = '10px 15px';
-                            optionDiv.style.transition = 'all 0.2s ease';
-                            optionDiv.style.cursor = 'pointer';
-
-                            const innerDiv = document.createElement('div');
-                            innerDiv.className = 'd-flex justify-content-between align-items-center';
-
-                            const nameSpan = document.createElement('span');
-                            nameSpan.style.fontWeight = '600';
-                            nameSpan.style.color = '#333';
-                            nameSpan.textContent = option.text.split('-')[0].trim();
-
-                            const priceSpan = document.createElement('span');
-                            priceSpan.className = 'badge';
-                            priceSpan.style.backgroundColor = '#FF6B6B';
-                            priceSpan.style.color = '#fff';
-                            priceSpan.style.fontWeight = '600';
-                            priceSpan.style.padding = '6px 12px';
-                            priceSpan.style.borderRadius = '20px';
-                            priceSpan.textContent = option.text.split('-')[1]?.trim() || '';
-
-                            innerDiv.appendChild(nameSpan);
-                            innerDiv.appendChild(priceSpan);
-                            optionDiv.appendChild(innerDiv);
-
-                            // Add hover effect
-                            optionDiv.addEventListener('mouseover', function () {
-                                this.style.backgroundColor = '#f0f0f0';
-                                this.style.transform = 'translateX(5px)';
-                            });
-
-                            optionDiv.addEventListener('mouseout', function () {
-                                this.style.backgroundColor = '#f8f9fa';
-                                this.style.transform = 'translateX(0)';
-                            });
-
-                            optionsList.appendChild(optionDiv);
-                        });
-
-                        modalOptions.appendChild(optionsList);
-                    }
-                }
+                modalOptions.appendChild(infoDiv);
 
                 // Get dish images from the hidden data div
                 let dishImages = [];
@@ -359,10 +294,66 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
     });
 </script>
 
+<!-- GLightbox CSS and JS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/css/glightbox.min.css">
+<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+
 <!-- Add these CSS styles to your existing style tag -->
 <style>
-    .menu-card {
+    .menu-item-simple {
         cursor: pointer;
+        transition: transform 0.3s ease;
+        padding: 5px;
+        border-radius: 8px;
+        background: transparent;
+    }
+
+    .menu-item-simple:hover {
+        transform: translateY(-3px);
+    }
+
+    .menu-item-simple img {
+        transition: transform 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu-item-simple:hover img {
+        transform: scale(1.02);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .menu-item-simple h5 {
+        color: #333;
+        font-weight: 600;
+        margin-top: 8px;
+        margin-bottom: 4px;
+        font-size: 0.9rem;
+        line-height: 1.2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .menu-item-simple .price {
+        color: #FF6B6B;
+        font-weight: 700;
+        font-size: 1rem;
+        margin-top: 4px;
+    }
+
+    /* Mobile responsive adjustments */
+    @media (max-width: 768px) {
+        .menu-item-simple h5 {
+            font-size: 0.8rem;
+        }
+
+        .menu-item-simple .price {
+            font-size: 0.9rem;
+        }
+
+        .menu-item-simple {
+            padding: 3px;
+        }
     }
 
     .modal-content {
@@ -384,5 +375,13 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
 
     .modal.show .modal-dialog {
         transform: scale(1);
+    }
+
+    /* GLightbox customization */
+    .glightbox-container .gslide-description {
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
     }
 </style>
