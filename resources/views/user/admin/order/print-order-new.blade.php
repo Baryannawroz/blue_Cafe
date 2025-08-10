@@ -429,7 +429,7 @@
 
             // Try to print immediately
             try {
-                window.print();
+               
 
                 // Close window after a short delay
                 setTimeout(function() {
