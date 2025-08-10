@@ -8,213 +8,246 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Receipt</title>
-    <style>
-        /* Base settings for receipt */
+  <style>
+    /* Base settings for receipt */
+    body {
+        font-family: 'Courier New', monospace;
+        line-height: 1.3;
+        margin: 0;
+        padding: 0;
+        font-size: 12px;
+        width: 80mm;
+        /* Standard thermal receipt width */
+        font-weight: normal;
+        color: #000;
+    }
+
+    /* Receipt Container */
+    .receipt-container {
+        width: 80mm;
+        max-width: 80mm;
+        margin: 0 auto;
+        background: white;
+    }
+
+    /* Header */
+    .header {
+        text-align: center;
+        margin-bottom: 8px;
+    }
+
+    .store-name {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+
+    .store-details {
+        font-size: 11px;
+        line-height: 1.3;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        border-top: 1px dashed #000;
+        border-bottom: 1px dashed #000;
+        padding: 4px 0;
+        margin: 4px 0;
+    }
+
+    /* Order Info */
+    .order-info {
+        margin-bottom: 8px;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        margin-bottom: 2px;
+    }
+
+    .info-label {
+        font-weight: bold;
+    }
+
+    /* Items Table */
+    .items-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 8px;
+        border-top: 1px dashed #000;
+        border-bottom: 1px dashed #000;
+    }
+
+    .items-table th {
+        font-size: 11px;
+        text-align: left;
+        padding: 3px 2px;
+        border-bottom: 1px solid #000;
+    }
+
+    .items-table td {
+        font-size: 11px;
+        padding: 2px 2px;
+        border-bottom: 1px dotted #ccc;
+    }
+
+    .items-table .sl {
+        width: 8%;
+        text-align: center;
+    }
+
+    .items-table .description {
+        width: 42%;
+        font-weight: bold;
+        font-size: 10px;
+    }
+
+    .items-table .qty {
+        width: 10%;
+        text-align: center;
+        font-size: 11px;
+    }
+
+    .items-table .rate,
+    .items-table .amount {
+        width: 20%;
+        text-align: right;
+    }
+
+    .item-variant {
+        font-size: 9px;
+        color: #555;
+    }
+
+    /* Totals */
+    .totals {
+        margin-bottom: 8px;
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        margin-bottom: 2px;
+    }
+
+    .grand-total {
+        font-weight: bold;
+        font-size: 13px;
+        border-top: 1px solid #000;
+        padding-top: 3px;
+        margin-top: 4px;
+    }
+
+    /* Payment Info */
+    .payment-info {
+        margin-bottom: 10px;
+        border-bottom: 1px dashed #000;
+        padding-bottom: 6px;
+    }
+
+    .payment-title {
+        font-weight: bold;
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+
+    .payment-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        margin-bottom: 2px;
+    }
+
+    .card-number {
+        font-family: monospace;
+        letter-spacing: 1px;
+    }
+
+    /* Footer */
+    .footer {
+        text-align: center;
+        margin-top: 8px;
+    }
+
+    .thank-you {
+        font-weight: bold;
+        font-size: 12px;
+        margin-bottom: 3px;
+    }
+
+    .visit-again {
+        font-size: 11px;
+        margin-bottom: 6px;
+    }
+
+    .receipt-id {
+        font-size: 10px;
+        letter-spacing: 1px;
+        font-family: monospace;
+    }
+
+    /* Print-specific styles */
+    @media print {
         body {
-            font-family: 'Courier New', monospace;
-            line-height: 1.2;
+            width: 80mm;
             margin: 0;
             padding: 0;
-            font-size: 12px;
-            width: 80mm;
-            font-weight: bold;
-            /* Standard thermal receipt width */
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
 
-        /* Receipt Container */
         .receipt-container {
-            width: 80mm;
-            max-width: 80mm;
-            margin: 0 auto;
-            background: white;
-            color: black;
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .store-name {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .store-details {
-            font-size: 11px;
-            line-height: 1.3;
-        }
-
-        .title {
-            text-align: center;
-            font-size: 14px;
-            font-weight: bold;
-            border-top: 1px dashed #000;
-            border-bottom: 1px dashed #000;
-            padding: 5px 0;
-        }
-
-        /* Order Info */
-        .order-info {
-            margin-bottom: 10px;
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 10px;
-            margin-bottom: 2px;
-        }
-
-        .info-label {
-            font-weight: bold;
-            font-size: 8px;
-        }
-
-        /* Items Table */
-        .items-table {
             width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 10px;
-            border-top: 1px dashed #000;
-            border-bottom: 1px dashed #000;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
         }
 
-        .items-table th {
-            font-size: 11px;
-            text-align: left;
-            padding: 5px 2px;
-            border-bottom: 1px solid #000;
+        .receipt-container {
+            page-break-inside: avoid;
         }
 
-        .items-table td {
-            font-size: 11px;
-            padding: 3px 2px;
-            border-bottom: 1px dotted #ccc;
+        @page {
+            margin: 0;
+            size: 80mm auto;
         }
 
-        .items-table .sl {
-            width: 8%;
-            text-align: center;
+        body * {
+            visibility: hidden;
         }
 
-        .items-table .description {
-            width: 42%;
-            font-weight: bold;
-            font-size: 8px;
+        .receipt-container,
+        .receipt-container * {
+            visibility: visible;
         }
 
-        .items-table .qty {
-            width: 10%;
-            text-align: center;
-            font-size: 12px;
+        .receipt-container {
+            position: absolute;
+            left: 0;
+            top: 0;
         }
+    }
 
-        .items-table .rate,
-        .items-table .amount {
-            width: 20%;
-            text-align: right;
-        }
-
-        .item-variant {
-            font-size: 9px;
-            color: #555;
-        }
-
-        /* Totals */
-        .totals {
-            margin-bottom: 10px;
-        }
-
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            margin-bottom: 2px;
-        }
-
-        .grand-total {
-            font-weight: bold;
-            font-size: 13px;
-            border-top: 1px solid #000;
-            padding-top: 3px;
-            margin-top: 5px;
-        }
-
-        /* Payment Info */
-        .payment-info {
-            margin-bottom: 15px;
-            border-bottom: 1px dashed #000;
-            padding-bottom: 10px;
-        }
-
-        .payment-title {
-            font-weight: bold;
-            font-size: 12px;
-            margin-bottom: 5px;
-        }
-
-        .payment-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            margin-bottom: 2px;
-        }
-
-        .card-number {
-            font-family: monospace;
-            letter-spacing: 1px;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .thank-you {
-            font-weight: bold;
-            font-size: 12px;
-            margin-bottom: 3px;
-        }
-
-        .visit-again {
-            font-size: 11px;
-            margin-bottom: 10px;
-        }
-
-        .receipt-id {
-            font-size: 10px;
-            letter-spacing: 1px;
-            font-family: monospace;
-        }
-
-        /* Print-specific styles */
-        @media print {
-            body {
-                width: 80mm;
-                margin: 0;
-                padding: 0;
-            }
-
-            .receipt-container {
-                width: 100%;
-                max-width: 100%;
-                margin: 0;
-                padding: 0;
-                border: none;
-            }
-
-            .info-value {
-                font-size: 12px;
-            }
-        }
-    </style>
+    /* Hide scrollbars in web view */
+    body {
+        overflow: hidden;
+    }
+</style>
 </head>
 
 <body>
+    <!-- Fallback print instructions -->
+    <div class="print-instructions" id="printInstructions">
+        <h3>Printing Receipt...</h3>
+        <p>If print dialog appears, click "Print" to continue</p>
+        <p>Window will close automatically after printing</p>
+    </div>
+
     <div class="receipt-container">
         <!-- Header -->
         <div class="header">
@@ -380,8 +413,63 @@
     </div>
 
     <script>
-        window.print();
-            window.close();
+        // Enhanced auto-print functionality
+        let printAttempted = false;
+
+        function autoPrint() {
+            if (printAttempted) return;
+            printAttempted = true;
+
+            // Show instructions briefly
+            const instructions = document.getElementById('printInstructions');
+            if (instructions) {
+                instructions.classList.add('show');
+                setTimeout(() => instructions.classList.remove('show'), 2000);
+            }
+
+            // Try to print immediately
+            try {
+                window.print();
+
+                // Close window after a short delay
+                setTimeout(function() {
+                    window.close();
+                }, 2000);
+            } catch (e) {
+                console.log('Print failed:', e);
+                // Fallback: close window anyway
+                setTimeout(function() {
+                    window.close();
+                }, 3000);
+            }
+        }
+
+        // Execute print as soon as possible
+        if (document.readyState === 'loading') {
+            // Document still loading
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(autoPrint, 100);
+            });
+        } else {
+            // Document already loaded
+            setTimeout(autoPrint, 50);
+        }
+
+        // Also try on window load as backup
+        window.addEventListener('load', function() {
+            setTimeout(autoPrint, 100);
+        });
+
+        // Force print on any user interaction (for browsers that block auto-print)
+        document.addEventListener('click', autoPrint);
+        document.addEventListener('keydown', autoPrint);
+
+        // Auto-close after 5 seconds if nothing happens
+        setTimeout(function() {
+            if (!printAttempted) {
+                window.close();
+            }
+        }, 5000);
     </script>
 </body>
 
