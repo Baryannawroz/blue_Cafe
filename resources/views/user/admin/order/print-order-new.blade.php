@@ -8,236 +8,264 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Receipt</title>
-  <style>
-    /* Base settings for receipt */
-    body {
-        font-family: 'Courier New', monospace;
-        line-height: 1.3;
-        margin: 0;
-        padding: 0;
-        font-size: 12px;
-        width: 80mm;
-        /* Standard thermal receipt width */
-        font-weight: normal;
-        color: #000;
-    }
-
-    /* Receipt Container */
-    .receipt-container {
-        width: 80mm;
-        max-width: 80mm;
-        margin: 0 auto;
-        background: white;
-    }
-
-    /* Header */
-    .header {
-        text-align: center;
-        margin-bottom: 8px;
-    }
-
-    .store-name {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 4px;
-    }
-
-    .store-details {
-        font-size: 11px;
-        line-height: 1.3;
-    }
-
-    .title {
-        text-align: center;
-        font-size: 14px;
-        font-weight: bold;
-        border-top: 1px dashed #000;
-        border-bottom: 1px dashed #000;
-        padding: 4px 0;
-        margin: 4px 0;
-    }
-
-    /* Order Info */
-    .order-info {
-        margin-bottom: 8px;
-    }
-
-    .info-row {
-        display: flex;
-        justify-content: space-between;
-        font-size: 11px;
-        margin-bottom: 2px;
-    }
-
-    .info-label {
-        font-weight: bold;
-    }
-
-    /* Items Table */
-    .items-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 8px;
-        border-top: 1px dashed #000;
-        border-bottom: 1px dashed #000;
-    }
-
-    .items-table th {
-        font-size: 11px;
-        text-align: left;
-        padding: 3px 2px;
-        border-bottom: 1px solid #000;
-    }
-
-    .items-table td {
-        font-size: 11px;
-        padding: 2px 2px;
-        border-bottom: 1px dotted #ccc;
-    }
-
-    .items-table .sl {
-        width: 8%;
-        text-align: center;
-    }
-
-    .items-table .description {
-        width: 42%;
-        font-weight: bold;
-        font-size: 10px;
-    }
-
-    .items-table .qty {
-        width: 10%;
-        text-align: center;
-        font-size: 11px;
-    }
-
-    .items-table .rate,
-    .items-table .amount {
-        width: 20%;
-        text-align: right;
-    }
-
-    .item-variant {
-        font-size: 9px;
-        color: #555;
-    }
-
-    /* Totals */
-    .totals {
-        margin-bottom: 8px;
-    }
-
-    .total-row {
-        display: flex;
-        justify-content: space-between;
-        font-size: 11px;
-        margin-bottom: 2px;
-    }
-
-    .grand-total {
-        font-weight: bold;
-        font-size: 13px;
-        border-top: 1px solid #000;
-        padding-top: 3px;
-        margin-top: 4px;
-    }
-
-    /* Payment Info */
-    .payment-info {
-        margin-bottom: 10px;
-        border-bottom: 1px dashed #000;
-        padding-bottom: 6px;
-    }
-
-    .payment-title {
-        font-weight: bold;
-        font-size: 12px;
-        margin-bottom: 4px;
-    }
-
-    .payment-row {
-        display: flex;
-        justify-content: space-between;
-        font-size: 11px;
-        margin-bottom: 2px;
-    }
-
-    .card-number {
-        font-family: monospace;
-        letter-spacing: 1px;
-    }
-
-    /* Footer */
-    .footer {
-        text-align: center;
-        margin-top: 8px;
-    }
-
-    .thank-you {
-        font-weight: bold;
-        font-size: 12px;
-        margin-bottom: 3px;
-    }
-
-    .visit-again {
-        font-size: 11px;
-        margin-bottom: 6px;
-    }
-
-    .receipt-id {
-        font-size: 10px;
-        letter-spacing: 1px;
-        font-family: monospace;
-    }
-
-    /* Print-specific styles */
-    @media print {
+    <style>
+        /* Base settings for receipt */
         body {
+            font-family: 'Courier New', monospace;
+            line-height: 1.3;
+            margin: 0;
+            padding: 0;
+            font-size: 18px;
+            font-weight: bold;
             width: 80mm;
-            margin: 0;
-            padding: 0;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
+            /* Standard thermal receipt width */
+            font-weight: normal;
+            color: #000;
         }
 
+        /* Receipt Container */
         .receipt-container {
+            width: 80mm;
+            max-width: 80mm;
+            margin: 0 auto;
+            background: white;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .store-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .store-details {
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            border-top: 1px dashed #000;
+            border-bottom: 1px dashed #000;
+            padding: 4px 0;
+            margin: 4px 0;
+        }
+
+        /* Order Info */
+        .order-info {
+            margin-bottom: 8px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .info-label {
+            font-weight: bold;
+        }
+
+        /* Items Table */
+        .items-table {
             width: 100%;
-            max-width: 100%;
-            margin: 0;
-            padding: 0;
+            border-collapse: collapse;
+            margin-bottom: 8px;
+            border-top: 1px dashed #000;
+            border-bottom: 1px dashed #000;
+            font-size: 18px;
+            font-weight: bold;
         }
 
-        .receipt-container {
-            page-break-inside: avoid;
+        .items-table th {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: left;
+            padding: 3px 2px;
+            border-bottom: 1px solid #000;
         }
 
-        @page {
-            margin: 0;
-            size: 80mm auto;
+        .items-table td {
+            font-size: 18px;
+            font-weight: bold;
+            padding: 2px 2px;
+
         }
 
-        body * {
-            visibility: hidden;
-        }
-
-        .receipt-container,
-        .receipt-container * {
-            visibility: visible;
-        }
-
-        .receipt-container {
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
+     .items-table tr {
+    border-bottom: 2px solid #000; /* pure black, thicker for visibility */
     }
 
-    /* Hide scrollbars in web view */
-    body {
-        overflow: hidden;
+    @media print {
+    .items-table tr {
+    border-bottom: 2px solid #000; /* ensure print keeps it */
     }
-</style>
+    }
+
+
+        .items-table .sl {
+            width: 8%;
+            text-align: center;
+        }
+
+        .items-table .description {
+            width: 42%;
+
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .items-table .qty {
+            width: 10%;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .items-table .rate,
+        .items-table .amount {
+            width: 20%;
+            text-align: right;
+        }
+
+        .item-variant {
+            font-size: 18px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        /* Totals */
+        .totals {
+            margin-bottom: 8px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .grand-total {
+            font-weight: bold;
+            font-size: 18px;
+
+            border-top: 1px solid #000;
+            padding-top: 3px;
+            margin-top: 4px;
+        }
+
+        /* Payment Info */
+        .payment-info {
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #000;
+            padding-bottom: 6px;
+        }
+
+        .payment-title {
+            font-weight: bold;
+            font-size: 18px;
+
+            margin-bottom: 4px;
+        }
+
+        .payment-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .card-number {
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .thank-you {
+            font-weight: bold;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .visit-again {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .receipt-id {
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            font-family: monospace;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            body {
+                width: 80mm;
+                margin: 0;
+                padding: 0;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .receipt-container {
+                width: 100%;
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            .receipt-container {
+                page-break-inside: avoid;
+            }
+
+            @page {
+                margin: 0;
+                size: 80mm auto;
+            }
+
+            body * {
+                visibility: hidden;
+            }
+
+            .receipt-container,
+            .receipt-container * {
+                visibility: visible;
+            }
+
+            .receipt-container {
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+        }
+
+        /* Hide scrollbars in web view */
+        body {
+            overflow: hidden;
+        }
+    </style>
 </head>
 
 <body>
@@ -289,7 +317,7 @@
         <table class="items-table">
             <thead>
                 <tr>
-                    <th class="sl">Sl</th>
+
                     <th class="description">Description</th>
                     <th class="qty">Qty</th>
                     <th class="rate">Rate</th>
@@ -299,10 +327,10 @@
             <tbody>
                 @foreach($order->orderPrice as $index => $orderDetails)
                 <tr>
-                    <td class="sl">{{ $index + 1 }}</td>
+
                     <td class="description qty">
                         {{ $orderDetails->dish->dish }}
-                        <div class="item-variant">{{ $orderDetails->dishType->dish_type }}</div>
+
                     </td>
                     <td class="qty">{{ $orderDetails->quantity }}</td>
                     <td class="rate">{{ number_format($orderDetails->net_price, 0) }}</td>
@@ -429,7 +457,7 @@
 
             // Try to print immediately
             try {
-               
+
 
                 // Close window after a short delay
                 setTimeout(function() {
