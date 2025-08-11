@@ -270,6 +270,13 @@ class OrderController extends Controller
             'order' => $order
         ]);
     }
+    public function printOrderStaff($id)
+    {
+        $order = Order::findOrFail($id);
+        return view('user.admin.order.print-order-new-staf', [
+            'order' => $order
+        ]);
+    }
 
     /**
      * Mark order (if order marked, no one can edit/delete this order)

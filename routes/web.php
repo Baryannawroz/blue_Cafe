@@ -219,6 +219,7 @@ Route::middleware('active.user')->group(function () {
         Route::get('order', [OrderController::class, 'Order']);
         Route::get('/new-order/{table_id}', [OrderController::class, 'newOrder']);
         Route::get('/print-order/{id}', [OrderController::class, 'printOrder']);
+        Route::get('/print-order-staff/{id}', [OrderController::class, 'printOrderStaff']);
         Route::get('/marked-order/{id}', [OrderController::class, 'markOrder']);
         Route::get('/delete-order/{id}', [OrderController::class, 'deleteOrder']);
         Route::get('/all-order', [OrderController::class, 'allOrder']);

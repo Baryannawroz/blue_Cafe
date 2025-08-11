@@ -324,8 +324,7 @@
 
                     <th class="description">Description</th>
                     <th class="qty">Qty</th>
-                    <th class="rate">Rate</th>
-                    <th class="amount">Amount</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -337,55 +336,18 @@
 
                     </td>
                     <td class="qty">{{ $orderDetails->quantity }}</td>
-                    <td class="rate">{{ number_format($orderDetails->net_price, 0) }}</td>
-                    <td class="amount">{{ number_format(ceil(($orderDetails->net_price - $orderDetails->net_price *
-                        $orderDetails->discount /100)/250 )*250 * $orderDetails->quantity, 0) }}</td>
+
+                </tr>
+                @if ($orderDetails->note)
+                <tr>
+                    <td colspan="5" class="note">{{ $orderDetails->note }}</td>
                 </tr>
 
-
-
+                @endif
                 @endforeach
             </tbody>
         </table>
-
-        <!-- Totals -->
-        <div class="totals">
-            <div class="total-row">
-                <div class="total-label">Subtotal:</div>
-                <div class="total-value">{{ config('restaurant.currency.symbol') }}{{
-                    number_format($order->orderPrice->sum('gross_price'), 0) }}</div>
-            </div>
-
-            @if($order->discount > 0)
-            <div class="total-row">
-                <div class="total-label">Discount:</div>
-                <div class="total-value">
-                    -{{ config('restaurant.currency.symbol') }}{{ number_format($order->discount, 0) }}</div>
-            </div>
-            @endif
-
-            <div class="total-row">
-                <div class="total-value">{{ config('restaurant.currency.symbol') }}{{ number_format($order->vat, 0) }}
-                </div>
-            </div>
-
-            <div class="total-row grand-total">
-                <div class="total-label">TOTAL:</div>
-                <div class="total-value">{{ config('restaurant.currency.symbol') }}{{
-                    number_format($order->orderPrice->sum('gross_price')+($order->orderPrice->sum('gross_price')*$order->vat)/100
-                    - $order->discount, 0) }}</div>
-            </div>
-        </div>
-
-
-
-        <!-- Footer -->
-        <div class="footer">
-            <div class="thank-you">Thank You For Your Order</div>
-            <div class="visit-again">Please Visit Again</div>
-
-        </div>
-        <div style="padding-top: 30px">.</div>
+        <div style="padding-top: 20px">.</div>
     </div>
 
     <script>

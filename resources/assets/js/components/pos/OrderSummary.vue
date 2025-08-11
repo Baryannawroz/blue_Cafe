@@ -207,9 +207,17 @@
                 <div
                     class="btn btn-outline"
                     role="button"
-                    @click="saveOrder(true)"
+                    @click="saveOrder(1)"
                 >
                     print
+                    <span class="shortcut-badge">F7</span>
+                </div>
+                <div
+                    class="btn btn-outline"
+                    role="button"
+                    @click="saveOrder(2)"
+                >
+                    staff
                     <span class="shortcut-badge">F7</span>
                 </div>
                 <div
@@ -319,7 +327,7 @@
                                 </span>
                                 <input
                                     autofocus
-                                    @keydown.enter="saveOrder(true)"
+                                    @keydown.enter="saveOrder(1)"
                                     type="number"
                                     v-model.number="currentPaymentAmount"
                                     placeholder="Enter amount"
@@ -341,7 +349,7 @@
                             </button>
                             <button
                                 class="btn btn-success btn-block"
-                                @click="saveOrder(true, true)"
+                                @click="saveOrder(1, true)"
                                 role="button"
                             >
                                 Complete & Print Order
@@ -840,7 +848,7 @@ export default {
 
 .actions-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 10px;
 }
 

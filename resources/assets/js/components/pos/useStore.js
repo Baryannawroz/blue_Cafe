@@ -261,7 +261,7 @@ if (clear) {
 }
 ,
 
-        async saveOrder(shouldPrint = false,orderComplete =false) {
+        async saveOrder(shouldPrint = false, orderComplete = false) {
 
 const total = state.carts.value.reduce((sum, item) => {
   return sum + (item.price * item.quantity);
@@ -304,7 +304,7 @@ const total = state.carts.value.reduce((sum, item) => {
                 state.isOrderModalVisible.value = false;
 
                 if (shouldPrint && response.data.id) {
-                    await actions.printInvoice(response.data.id);
+                    await actions.printInvoice(response.data.id,shouldPrint);
                 }
 
                 return response.data;
@@ -317,7 +317,9 @@ const total = state.carts.value.reduce((sum, item) => {
             }
         },
 
-        async printInvoice(orderId) {
+        async printInvoice(orderId, shouldPrint) {
+                        console.log(shouldPrint);
+
             if (!orderId) {
                 actions.showToast("Cannot print receipt: Order ID is missing", 3000);
                 return;
@@ -325,7 +327,7 @@ const total = state.carts.value.reduce((sum, item) => {
 
             try {
                 state.isPrinting.value = true;
-                const response = await axios.get(`/print-order/${orderId}`, {
+                const response = await axios.get(`/print-order${shouldPrint == 2 ? '-staff':''}/${orderId}`, {
                     responseType: 'text'
                 });
 
