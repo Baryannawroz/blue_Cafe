@@ -15,7 +15,7 @@
             line-height: 1.3;
             margin: 0;
             padding: 0;
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
             width: 80mm;
             /* Standard thermal receipt width */
@@ -38,20 +38,20 @@
         }
 
         .store-name {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
             margin-bottom: 4px;
         }
 
         .store-details {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
             line-height: 1.3;
         }
 
         .title {
             text-align: center;
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
             border-top: 1px dashed #000;
             border-bottom: 1px dashed #000;
@@ -67,7 +67,7 @@
         .info-row {
             display: flex;
             justify-content: space-between;
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
             margin-bottom: 2px;
         }
@@ -83,12 +83,12 @@
             margin-bottom: 8px;
             border-top: 1px dashed #000;
             border-bottom: 1px dashed #000;
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
         }
 
         .items-table th {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
             text-align: left;
             padding: 3px 2px;
@@ -96,7 +96,7 @@
         }
 
         .items-table td {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
             padding: 2px 2px;
             border: 2px solid #000;
@@ -124,14 +124,14 @@
         .items-table .description {
             width: 42%;
 
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
         }
 
         .items-table .qty {
             width: 10%;
             text-align: center;
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
         }
 
@@ -142,7 +142,7 @@
         }
 
         .item-variant {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
             color: #555;
         }
@@ -155,14 +155,14 @@
         .total-row {
             display: flex;
             justify-content: space-between;
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
             margin-bottom: 2px;
         }
 
         .grand-total {
             font-weight: bold;
-            font-size: 18px;
+            font-size: 14px;
 
             border-top: 1px solid #000;
             padding-top: 3px;
@@ -178,7 +178,7 @@
 
         .payment-title {
             font-weight: bold;
-            font-size: 18px;
+            font-size: 14px;
 
             margin-bottom: 4px;
         }
@@ -186,7 +186,7 @@
         .payment-row {
             display: flex;
             justify-content: space-between;
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
             margin-bottom: 2px;
         }
@@ -204,19 +204,19 @@
 
         .thank-you {
             font-weight: bold;
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
             margin-bottom: 3px;
         }
 
         .visit-again {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .receipt-id {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
             letter-spacing: 1px;
             font-family: monospace;
