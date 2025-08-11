@@ -99,18 +99,21 @@
             font-size: 18px;
             font-weight: bold;
             padding: 2px 2px;
-
+            border: 2px solid #000;
+            /* ensure print keeps it */
         }
 
-     .items-table tr {
-    border-bottom: 2px solid #000; /* pure black, thicker for visibility */
-    }
+        .items-table tr {
+            border-bottom: 2px solid #000;
+            /* pure black, thicker for visibility */
+        }
 
-    @media print {
-    .items-table tr {
-    border-bottom: 2px solid #000; /* ensure print keeps it */
-    }
-    }
+        @media print {
+            .items-table tr {
+                border-bottom: 2px solid #000;
+                /* ensure print keeps it */
+            }
+        }
 
 
         .items-table .sl {
