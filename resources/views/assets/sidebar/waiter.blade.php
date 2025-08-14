@@ -20,10 +20,19 @@
                     </ul>
                 </li>
 
-                <li class="">
+                <li class="hidden">
                     <a href="{{url('/kitchen-status')}}" class="waves-effect"><i class="icon icon-fire"></i> <span>
                             Kitchen Status </span> </a>
                 </li>
+                </li>
+                    <li class="has_sub">
+                        <a href="javascript:void(0);" class="waves-effect"><span>Expense</span> <span class="menu-arrow"></span></a>
+                        <ul style="">
+                            {{--<li><a href="{{url('/new-purses')}}"><span>New Purses</span></a></li>--}}
+                            <li><a href="{{url('/add-expense')}}"><span>Add Expense</span></a></li>
+                            <li><a href="{{url('/all-expanse')}}"><span>All Expense</span></a></li>
+                        </ul>
+                    </li>
 
             </ul>
             <div class="clearfix"></div>

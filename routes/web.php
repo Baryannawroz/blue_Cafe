@@ -214,6 +214,19 @@ Route::middleware('active.user')->group(function () {
 
     // Waiter Only
     Route::middleware(['waiter'])->group(function () {
+
+
+        Route::any('/add-reason', [ReasonController::class, 'create']);
+        Route::any('/save-reason', [ReasonController::class, 'store']);
+        Route::get('/account-summary', [AccountantController::class, 'summary']);
+        Route::any('/add-expense', [AccountantController::class, 'addExpanse']);
+        Route::any('/edit-expanse/{id}', [AccountantController::class, 'editExpanse']);
+        Route::post('/save-expense', [AccountantController::class, 'saveExpanse']);
+        Route::post('/update-expanse/{id}', [AccountantController::class, 'updateExpanse']);
+        Route::get('/delete-expanse/{id}', [AccountantController::class, 'deleteExpanse']);
+        Route::get('/all-expanse', [AccountantController::class, 'allExpanse']);
+        Route::get('/all-income', [AccountantController::class, 'allIncome']);
+
         //Dish
         Route::get('/dish-types/{dish_id}', [RecipeController::class, 'getTypesOfDish']);
         Route::get('order', [OrderController::class, 'Order']);
