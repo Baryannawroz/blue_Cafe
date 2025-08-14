@@ -273,22 +273,16 @@
 </head>
 
 <body>
-    <!-- Fallback print instructions -->
-    <div class="print-instructions" id="printInstructions">
-        <h3>Printing Receipt...</h3>
-        <p>If print dialog appears, click "Print" to continue</p>
-        <p>Window will close automatically after printing</p>
-    </div>
-
     <div class="receipt-container">
         <!-- Header -->
         <div class="header">
+            <div><img src="{{ asset('dashboard/images/logo.png') }}" style="height: 150px; width: 150px"></div>
             <div class="store-name">{{config('app.name')}}</div>
-            <div class="store-details">
+            {{-- <div class="store-details">
                 <div>{{config('restaurant.contact.address')}}</div>
                 <div>Phone: {{config('restaurant.contact.phone')}}</div>
                 <div>VAT No: {{config('restaurant.vat.vat_number')}}</div>
-            </div>
+            </div> --}}
         </div>
 
         <div class="title">RECEIPT</div>

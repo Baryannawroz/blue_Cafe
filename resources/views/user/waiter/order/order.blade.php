@@ -5,19 +5,25 @@ New Order
 @endsection
 
 @section('content')
+<style>
+    .green{
+        background-color: #4eed73b5
+    }
+    .red{
+        background-color: #dc35466b
+    }
+</style>
 
 <div class="container mt-5">
     @foreach ($tables->chunk(3) as $tableGroup)
     <div class="row mb-4">
         @foreach ($tableGroup as $table)
-        <div class="col-md-4 mb-3">
+        <div class="col-md-4  mb-3 ">
             <a href="{{ $table->order_id != null ? 'edit-order/' . $table->order_id : 'new-order/'. $table->id }}">
-                <div class="card table-card h-100 shadow-sm border-0">
-                    <div class="card-body text-center p-4">
-                        <div class="table-icon mb-3">
-                            <i class="fas fa-utensils fa-3x text-primary"></i>
-                        </div>
-                        <h3 class="card-title">Table #{{ $table->table_no }}</h3>
+                <div class="  ">
+                    <div class="card-body text-center p-4 {{ $table->order_id != null ? 'red' :'green' }}">
+
+                        <h3 class="card-title">{{ $table->table_no }}</h3>
 
                         @if($table->order_id != null )
                         <span class="badge bg-danger">Occupied</span>
