@@ -45,7 +45,7 @@ $kitchen = \App\Models\User::where('role', 3)->get();
             </div>
             <div class="text-right">
                 <h3 class="text-dark"><b class="counter">
-                        <?php $order = \App\Models\Order::where('created_at', 'like', \Carbon\Carbon::today()->format('Y-m-d') . '%')->get() ?>
+                        <?php $order = \App\Models\Order::where('created_at', 'like', \Carbon\Carbon::today('Asia/Baghdad')->format('Y-m-d') . '%')->get() ?>
                         {{count($order)}}
                     </b></h3>
                 <p class="text-muted">Today's Order</p>
@@ -91,17 +91,18 @@ $kitchen = \App\Models\User::where('role', 3)->get();
     </div>
 </div>
 
-{{--<pre>--}}
+{{--
+<pre>--}}
 {{--{{count($kitchen[0]->kitchenOrderToday)}}--}}
 {{--{{count($kitchen[1]->kitchenOrderToday)}}--}}
 {{--</pre>--}}
 
 @section('extra-js')
 
-    <script src="{{url('/dashboard/plugins/raphael/raphael-min.js')}}"></script>
-    <script src="{{url('/dashboard/plugins/morris/morris.min.js')}}"></script>
-    <script>
-        $(document).ready(function () {
+<script src="{{url('/dashboard/plugins/raphael/raphael-min.js')}}"></script>
+<script src="{{url('/dashboard/plugins/morris/morris.min.js')}}"></script>
+<script>
+    $(document).ready(function () {
             new Morris.Bar({
                 // ID of the element in which to draw the chart.
                 element: 'myfirstchart',
@@ -187,5 +188,5 @@ $kitchen = \App\Models\User::where('role', 3)->get();
                 resize: true
             });
         })
-    </script>
+</script>
 @endsection

@@ -99,7 +99,7 @@ class OrderController extends Controller
             $order->payment = $request->payment;
             $order->vat = $request->vat;
             $order->change_amount = $request->change_amount;
-            $order->created_at = now()->addHours(3);
+            $order->created_at = now();
 
             $order->save();
             if ($request->has('table_id')) {
