@@ -72,69 +72,107 @@
                 :key="index"
                 :class="{ 'cart-item-new': animatingItems[cart.cartItemId] }"
             >
-                <div class="cart-item-details">
-                    <div class="cart-item-name">{{ cart.name }}</div>
-                    <!--        <div class="cart-item-variant">{{ cart.variantName }}</div> -->
-                    <div
-                        class="cart-item-price"
-                        style="font-size: 12px; margin-top: 8px"
-                    >
-                        {{ cart.price }}
+                <div class="cart-item-header">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name-row">
+                            <h4 class="cart-item-name">{{ cart.name }}</h4>
+                            <span class="cart-item-price">
+                                {{ config.currency.symbol }}{{ cart.price }}
+                            </span>
+                        </div>
                     </div>
-                    <div>
-                        <input
-                            type="text"
-                            v-model="cart.note"
-                            placeholder="Add note (optional)"
-                            class="border px-2 py-1 rounded w-90"
-                        />
-                    </div>
-                    <div class="p" style="font-size: 12px; margin-top: 8px"> <span style="padding-right: 4px;">Discount</span>
-                        <input
-                            type="number"
-                            v-model="cart.discount"
-                            placeholder="discount"
-                            class="border px-2 py-1 rounded"
-                        />
-                        <span>{{
-                            Math.ceil(
-                                (cart.price -
-                                    (cart.price * cart.discount) / 100) /
-                                    250
-                            ) * 250
-                        }}</span>
-                    </div>
-                </div>
-                <div class="cart-item-actions">
-                    <button
-                        class="quantity-btn"
-                        @click="
-                            updateCartItemQuantity(
-                                cart.cartItemId,
-                                cart.quantity - 1
-                            )
-                        "
-                    >
-                        -
-                    </button>
-                    <span class="item-quantity">{{ cart.quantity }}</span>
-                    <button
-                        class="quantity-btn"
-                        @click="
-                            updateCartItemQuantity(
-                                cart.cartItemId,
-                                cart.quantity + 1
-                            )
-                        "
-                    >
-                        +
-                    </button>
                     <button
                         class="remove-btn"
                         @click="deleteProductFromCart(cart.cartItemId)"
                     >
-                        ×
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
                     </button>
+                </div>
+
+                <div class="cart-item-controls">
+                    <div class="quantity-controls">
+                        <button
+                            class="quantity-btn decrease"
+                            @click="
+                                updateCartItemQuantity(
+                                    cart.cartItemId,
+                                    cart.quantity - 1
+                                )
+                            "
+                        >
+                            <svg
+                                width="12"
+                                height="12"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                        <span class="item-quantity">{{ cart.quantity }}</span>
+                        <button
+                            class="quantity-btn increase"
+                            @click="
+                                updateCartItemQuantity(
+                                    cart.cartItemId,
+                                    cart.quantity + 1
+                                )
+                            "
+                        >
+                            <svg
+                                width="12"
+                                height="12"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="discount-controls">
+                        <label class="discount-label">Discount</label>
+                        <input
+                            type="number"
+                            v-model="cart.discount"
+                            placeholder="0"
+                            class="discount-input"
+                            min="0"
+                            max="100"
+                        />
+                        <span class="discount-percent">%</span>
+                    </div>
+
+                    <div class="item-total">
+                        {{ config.currency.symbol
+                        }}{{ (cart.price * cart.quantity).toFixed(0) }}
+                    </div>
+                </div>
+
+                <div class="cart-item-options">
+                    <div class="note-section">
+                        <input
+                            type="text"
+                            v-model="cart.note"
+                            placeholder="Add note (optional)"
+                            class="note-input"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
@@ -183,7 +221,7 @@
                     }}{{ discountAmount.toFixed(2) }}</span
                 >
             </div>
-            <div class="total-row">
+            <div class="total-row hidden">
                 <span>Tax ({{ config.vat.vat_percentage }}%)</span>
                 <span
                     >{{ config.currency.symbol
@@ -205,7 +243,7 @@
                     <span class="shortcut-badge">F7</span>
                 </div>
                 <div
-                    class="btn btn-outline"
+                    class="btn btn-outline hidden"
                     role="button"
                     @click="saveOrder(1)"
                 >
@@ -408,7 +446,8 @@ const applyDiscount = () => {
 
     if (discountType.value === "percentage") {
         const percentage = Math.min(parseFloat(discountValue.value) || 0, 100);
-        discountAmount.value = Math.floor((subTotal.value * percentage) / 100/250)*250;
+        discountAmount.value =
+            Math.floor((subTotal.value * percentage) / 100 / 250) * 250;
         appliedDiscount.value = percentage;
     } else {
         const amount = Math.min(
@@ -426,15 +465,20 @@ const applyDiscount = () => {
 };
 
 // Handle order action (Save & Pay or Pay Now)
-const handleOrderAction = () => {
-    if (!isSaved.value) {
-        // Save order logic here
-        isSaved.value = true;
-        // Additional save logic...
-    }
+const handleOrderAction = async () => {
+    try {
+        if (!isSaved.value) {
+            // Save order logic here
+            isSaved.value = true;
+            // Additional save logic...
+        }
 
-    // Show payment modal
-    isOrderModalVisible.value = true;
+        // Show payment modal
+        isOrderModalVisible.value = true;
+    } catch (error) {
+        console.error("Error handling order action:", error);
+        // Show error toast or handle gracefully
+    }
 };
 
 // Function to handle keyboard shortcuts
@@ -489,51 +533,38 @@ const animateBalance = () => {
 // Watch for changes in the cart and handle animations and scrolling
 const previousCartLength = ref(carts.value.length);
 watch(
-    () => [...carts.value],
-    (newCart, oldCart) => {
+    () => carts.value.length,
+    (newLength, oldLength) => {
         // Check if cart length increased (new item added)
-        if (newCart.length > previousCartLength.value) {
+        if (newLength > previousCartLength.value) {
             // Get the last item (newly added)
-            const newItem = newCart[newCart.length - 1];
+            const newItem = carts.value[carts.value.length - 1];
             animateNewCartItem(newItem.cartItemId);
             animateBalance();
-        } else if (
-            newCart.length !== oldCart.length ||
-            JSON.stringify(newCart) !== JSON.stringify(oldCart)
-        ) {
-            // Cart item was removed or quantities changed
+        } else if (newLength !== previousCartLength.value) {
+            // Cart item was removed
             animateBalance();
         }
 
-        previousCartLength.value = newCart.length;
+        previousCartLength.value = newLength;
         scrollToBottom();
+    }
+);
+
+// Watch for cart content changes (quantities, prices, etc.)
+watch(
+    () =>
+        carts.value.map((item) => ({
+            id: item.cartItemId,
+            quantity: item.quantity,
+            price: item.price,
+            discount: item.discount,
+        })),
+    () => {
+        animateBalance();
     },
     { deep: true }
 );
-</script>
-<script>
-export default {
-    props: {
-        subTotal: {
-            type: Number,
-            required: true,
-        },
-        remainingBalance: {
-            type: Number,
-            required: true,
-        },
-    },
-    data() {
-        return {
-            currentPaymentAmount: this.subTotal, // Initialize from prop
-        };
-    },
-    methods: {
-        saveOrder(confirm) {
-            // your save logic
-        },
-    },
-};
 </script>
 
 <style scoped>
@@ -674,11 +705,19 @@ export default {
 }
 
 .cart-item {
-    padding: 15px;
-    border-bottom: 1px solid #f0f0f0;
-    display: flex;
-    justify-content: space-between;
+    background: #ffffff;
+    border: 1px solid #e1e5e9;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    padding: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
     animation-duration: 0.5s;
+}
+
+.cart-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
 }
 
 .cart-item-new {
@@ -699,57 +738,211 @@ export default {
     }
 }
 
-.cart-item-details {
-    flex-grow: 1;
+.cart-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-name-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .cart-item-name {
-    font-weight: 500;
-}
-
-.cart-item-variant {
-    font-size: 12px;
-    color: #666;
-    margin-top: 2px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0;
+    line-height: 1.2;
+    flex: 1;
 }
 
 .cart-item-price {
-    font-size: 14px;
-    color: #666;
-    margin-top: 2px;
+    font-size: 12px;
+    color: #718096;
+    font-weight: 500;
+    background: #f7fafc;
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    margin-right: 10px;
 }
 
-.cart-item-actions {
+.cart-item-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 6px 0;
+    border-top: 1px solid #f7fafc;
+    border-bottom: 1px solid #f7fafc;
+    gap: 12px;
+}
+
+.quantity-controls {
     display: flex;
     align-items: center;
+    gap: 6px;
 }
 
 .quantity-btn {
-    width: 24px;
-    height: 24px;
-    border: 1px solid #ddd;
-    background: white;
-    border-radius: 4px;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.2s ease;
+    color: #4a5568;
+}
+
+.quantity-btn:hover {
+    background: #f7fafc;
+    border-color: #cbd5e0;
+    transform: scale(1.05);
+}
+
+.quantity-btn.decrease:hover {
+    background: #fed7d7;
+    border-color: #feb2b2;
+    color: #e53e3e;
+}
+
+.quantity-btn.increase:hover {
+    background: #c6f6d5;
+    border-color: #9ae6b4;
+    color: #38a169;
 }
 
 .item-quantity {
-    margin: 0 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2d3748;
+    min-width: 20px;
+    text-align: center;
+}
+
+.item-total {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2d3748;
+    background: #f7fafc;
+    padding: 4px 8px;
+    border-radius: 4px;
 }
 
 .remove-btn {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     border: none;
-    background: none;
+    background: #fed7d7;
+    border-radius: 6px;
     cursor: pointer;
-    color: #e74c3c;
-    font-size: 16px;
-    margin-left: 8px;
+    color: #e53e3e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.remove-btn:hover {
+    background: #feb2b2;
+    transform: scale(1.1);
+}
+
+.cart-item-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.note-section {
+    width: 100%;
+}
+
+.note-input {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 12px;
+    background: #f7fafc;
+    transition: all 0.2s ease;
+}
+
+.note-input:focus {
+    outline: none;
+    border-color: #4299e1;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+.discount-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.discount-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #4a5568;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.discount-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    justify-content: center;
+}
+
+.discount-input {
+    width: 50px;
+    padding: 4px 6px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 12px;
+    text-align: center;
+    background: #f7fafc;
+    transition: all 0.2s ease;
+}
+
+.discount-input:focus {
+    outline: none;
+    border-color: #4299e1;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+.discount-percent {
+    font-size: 12px;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.discount-preview {
+    font-size: 12px;
+    font-weight: 600;
+    color: #38a169;
+    background: #c6f6d5;
+    padding: 3px 6px;
+    border-radius: 3px;
+    margin-left: auto;
 }
 
 /* Discount Section */

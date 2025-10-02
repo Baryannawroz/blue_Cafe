@@ -304,7 +304,36 @@ const total = state.carts.value.reduce((sum, item) => {
                 state.isOrderModalVisible.value = false;
 
                 if (shouldPrint && response.data.id) {
-                    await actions.printInvoice(response.data.id,shouldPrint);
+                    // For staff button, start printing and redirect after a short delay
+                    if (shouldPrint === 2) {
+                        actions.printInvoice(response.data.id, shouldPrint);
+                        // Redirect after a short delay to allow printing to start
+                        setTimeout(() => {
+                            window.location.href = '/order';
+                        }, 2000);
+                    } else if (orderComplete) {
+                        // For complete & print order, start printing and redirect after a short delay
+                        actions.printInvoice(response.data.id, shouldPrint);
+                        setTimeout(() => {
+                            window.location.href = '/order';
+                        }, 2000);
+                    } else {
+                        await actions.printInvoice(response.data.id, shouldPrint);
+                    }
+                }
+
+                // Redirect to order page for complete order actions (without printing)
+                if (orderComplete && !shouldPrint) {
+                    setTimeout(() => {
+                        window.location.href = '/order';
+                    }, 1000);
+                }
+
+                // Redirect to order page for regular save button as well
+                if (!shouldPrint && !orderComplete) {
+                    setTimeout(() => {
+                        window.location.href = '/order';
+                    }, 1000);
                 }
 
                 return response.data;
@@ -383,10 +412,10 @@ const total = state.carts.value.reduce((sum, item) => {
             try {
                 state.isLoading.value = true;
                 await Promise.all([
-                    this.fetchProducts(),
-                    this.fetchTables(),
-                    this.fetchConfig(),
-                    this.fetchDishCategories()
+                    actions.fetchProducts(),
+                    actions.fetchTables(),
+                    actions.fetchConfig(),
+                    actions.fetchDishCategories()
                 ]);
 
                 // Set initial table from URL parameter or default
@@ -394,17 +423,17 @@ const total = state.carts.value.reduce((sum, item) => {
                 const tableIdParam = urlParams.get('table_id') || window.initialSelectedTableId || window.table_id;
 
                 if (tableIdParam) {
-                    this.setSelectedTableById(Number(tableIdParam));
+                    actions.setSelectedTableById(Number(tableIdParam));
                 }
 
                 if (window.editOrderId) {
-                    await this.fetchOrderById();
+                    await actions.fetchOrderById();
                 }
 
                 state.initialized.value = true;
             } catch (error) {
                 console.error('Store initialization failed:', error);
-                this.showToast("Failed to initialize application", 3000);
+                actions.showToast("Failed to initialize application", 3000);
             } finally {
                 state.isLoading.value = false;
             }
