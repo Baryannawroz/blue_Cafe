@@ -29,10 +29,10 @@ $kitchen = \App\Models\User::where('role', 3)->get();
             </div>
             <div class="text-right">
                 <h3 class="text-dark"><b class="counter">
-                        <?php $purses = \App\Models\PursesProduct::where('created_at', 'like', \Carbon\Carbon::today()->format('Y-m-d') . '%')->get() ?>
-                        {{config('restaurant.currency.symbol')}} {{number_format($purses->sum('gross_price'),1)}} {{config('restaurant.currency.currency')}}
+                        <?php $purses = \App\Models\OfficeExpanse::where('created_at', 'like', \Carbon\Carbon::today()->format('Y-m-d') . '%')->get() ?>
+                        {{config('restaurant.currency.symbol')}} {{number_format($purses->sum('expanse'),1)}} {{config('restaurant.currency.currency')}}
                     </b></h3>
-                <p class="text-muted">Today's Purses</p>
+                <p class="text-muted">Today's expanse</p>
             </div>
             <div class="clearfix"></div>
         </div>
