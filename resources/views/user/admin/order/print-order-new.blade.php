@@ -307,7 +307,7 @@
             </div>
             <div class="info-row">
                 <div class="info-label">Table:</div>
-                <div class="info-value">{{$order->table_id}}</div>
+                <div class="info-value">{{$order->table->table_no}}</div>
             </div>
         </div>
 
