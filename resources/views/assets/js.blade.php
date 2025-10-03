@@ -50,11 +50,20 @@
 
 {{--Pusher Setup--}}
 <script>
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
+    // Only initialize Pusher if we have valid configuration
+    @if(config('broadcasting.connections.pusher.key') && config('broadcasting.connections.pusher.key') !== '')
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
 
-    var pusher = new Pusher('{{config('broadcasting.connections.pusher.key')}}', {
-        cluster: '{{config('broadcasting.connections.pusher.options.cluster')}}',
-        encrypted: {{config('broadcasting.connections.pusher.options.encrypted')}}
-    });
+        try {
+            var pusher = new Pusher('{{config('broadcasting.connections.pusher.key')}}', {
+                cluster: '{{config('broadcasting.connections.pusher.options.cluster', 'ap2')}}',
+                encrypted: {{config('broadcasting.connections.pusher.options.encrypted', true) ? 'true' : 'false'}}
+            });
+        } catch (error) {
+            console.warn('Pusher initialization failed:', error);
+        }
+    @else
+        console.warn('Pusher not configured - broadcasting disabled');
+    @endif
 </script>

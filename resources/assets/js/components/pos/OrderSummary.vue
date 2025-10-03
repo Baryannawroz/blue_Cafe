@@ -160,7 +160,7 @@
 
                     <div class="item-total">
                         {{ config.currency.symbol
-                        }}{{ (cart.price * cart.quantity).toFixed(0) }}
+                        }}{{ (parseFloat(cart.price || 0) * parseFloat(cart.quantity || 0)).toFixed(0) }}
                     </div>
                 </div>
 
@@ -211,27 +211,27 @@
                 <span>Subtotal</span>
                 <span
                     >{{ config.currency.symbol
-                    }}{{ parseFloat(subTotal).toFixed(2) }}</span
+                    }}{{ parseFloat(subTotal || 0).toFixed(2) }}</span
                 >
             </div>
             <div class="total-row" v-if="discountAmount > 0">
                 <span>Discount</span>
                 <span
                     >-{{ config.currency.symbol
-                    }}{{ discountAmount.toFixed(2) }}</span
+                    }}{{ parseFloat(discountAmount || 0).toFixed(2) }}</span
                 >
             </div>
             <div class="total-row hidden">
                 <span>Tax ({{ config.vat.vat_percentage }}%)</span>
                 <span
                     >{{ config.currency.symbol
-                    }}{{ taxAmount.toFixed(2) }}</span
+                    }}{{ parseFloat(taxAmount || 0).toFixed(2) }}</span
                 >
             </div>
             <div class="total-row final">
                 <span>Total</span>
                 <span :class="{ 'animate-balance': isBalanceAnimating }">
-                    {{ config.currency.symbol }}{{ finalTotal.toFixed(0) }}
+                    {{ config.currency.symbol }}{{ parseFloat(finalTotal || 0).toFixed(0) }}
                 </span>
             </div>
         </div>
@@ -303,7 +303,7 @@
                             <div class="summary-value">
                                 <strong>
                                     {{ config.currency.symbol }}
-                                    {{ subTotal.toFixed(0) }}
+                                    {{ parseFloat(subTotal || 0).toFixed(0) }}
                                 </strong>
                             </div>
                         </div>
@@ -311,14 +311,14 @@
                             <div class="summary-label">Total discount:</div>
                             <div class="summary-value">
                                 {{ config.currency.symbol
-                                }}{{ discountAmount.toFixed(2) }}
+                                }}{{ parseFloat(discountAmount || 0).toFixed(2) }}
                             </div>
                         </div>
                         <div class="summary-row">
                             <div class="summary-label">Total tax amount:</div>
                             <div class="summary-value">
                                 {{ config.currency.symbol
-                                }}{{ taxAmount.toFixed(0) }}
+                                }}{{ parseFloat(taxAmount || 0).toFixed(0) }}
                             </div>
                         </div>
                         <div class="summary-row total">
@@ -328,7 +328,7 @@
                             <div class="summary-value">
                                 <strong>
                                     {{ config.currency.symbol }}
-                                    {{ finalTotal.toFixed(0) }}
+                                    {{ parseFloat(finalTotal || 0).toFixed(0) }}
                                 </strong>
                             </div>
                         </div>
@@ -347,7 +347,7 @@
                                     {{ config.currency.symbol }}
                                     {{
                                         parseFloat(
-                                            finalTotal - currentPaymentAmount
+                                            (finalTotal || 0) - (currentPaymentAmount || 0)
                                         ).toFixed(2)
                                     }}
                                 </strong>
@@ -507,9 +507,11 @@ onUnmounted(() => {
 
 // Auto-scroll cart items to bottom when items are added or modified
 const scrollToBottom = () => {
-    if (cartItemsRef.value) {
+    if (cartItemsRef.value && cartItemsRef.value.scrollHeight !== undefined) {
         nextTick(() => {
-            cartItemsRef.value.scrollTop = cartItemsRef.value.scrollHeight;
+            if (cartItemsRef.value && cartItemsRef.value.scrollHeight !== undefined) {
+                cartItemsRef.value.scrollTop = cartItemsRef.value.scrollHeight;
+            }
         });
     }
 };
@@ -1121,7 +1123,7 @@ watch(
     justify-content: space-between;
     align-items: center;
     position: sticky;
-    //top: 0;
+    /* top: 0; */
     background-color: white;
     z-index: 2;
 }

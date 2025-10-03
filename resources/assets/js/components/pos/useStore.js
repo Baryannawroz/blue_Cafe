@@ -45,17 +45,21 @@ const createStore = () => {
     const getters = {
         subTotal: computed(() => {
             return state.carts.value.reduce((total, item) => {
-                return total + (Math.ceil((item.price - item.price * item.discount / 100) / 250) * 250 * item.quantity);
+                const price = parseFloat(item.price || 0);
+                const discount = parseFloat(item.discount || 0);
+                const quantity = parseFloat(item.quantity || 0);
+                return total + (Math.ceil((price - price * discount / 100) / 250) * 250 * quantity);
             }, 0);
         }),
 
         taxAmount: computed(() => {
-            const afterDiscountAmount = getters.subTotal.value - state.discountAmount.value;
-            return afterDiscountAmount * (parseInt(state.config.value.vat.vat_percentage) / 100);
+            const afterDiscountAmount = getters.subTotal.value - parseFloat(state.discountAmount.value || 0);
+            const vatPercentage = parseFloat(state.config.value.vat?.vat_percentage || 0);
+            return afterDiscountAmount * (vatPercentage / 100);
         }),
 
         finalTotal: computed(() => {
-            return getters.subTotal.value - state.discountAmount.value + getters.taxAmount.value;
+            return getters.subTotal.value - parseFloat(state.discountAmount.value || 0) + getters.taxAmount.value;
         }),
 
         filteredProducts: computed(() => {
