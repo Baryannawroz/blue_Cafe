@@ -160,7 +160,12 @@
 
                     <div class="item-total">
                         {{ config.currency.symbol
-                        }}{{ (parseFloat(cart.price || 0) * parseFloat(cart.quantity || 0)).toFixed(0) }}
+                        }}{{
+                            (
+                                parseFloat(cart.price || 0) *
+                                parseFloat(cart.quantity || 0)
+                            ).toFixed(0)
+                        }}
                     </div>
                 </div>
 
@@ -231,7 +236,8 @@
             <div class="total-row final">
                 <span>Total</span>
                 <span :class="{ 'animate-balance': isBalanceAnimating }">
-                    {{ config.currency.symbol }}{{ parseFloat(finalTotal || 0).toFixed(0) }}
+                    {{ config.currency.symbol
+                    }}{{ parseFloat(finalTotal || 0).toFixed(0) }}
                 </span>
             </div>
         </div>
@@ -311,7 +317,9 @@
                             <div class="summary-label">Total discount:</div>
                             <div class="summary-value">
                                 {{ config.currency.symbol
-                                }}{{ parseFloat(discountAmount || 0).toFixed(2) }}
+                                }}{{
+                                    parseFloat(discountAmount || 0).toFixed(2)
+                                }}
                             </div>
                         </div>
                         <div class="summary-row">
@@ -347,7 +355,8 @@
                                     {{ config.currency.symbol }}
                                     {{
                                         parseFloat(
-                                            (finalTotal || 0) - (currentPaymentAmount || 0)
+                                            (finalTotal || 0) -
+                                                (currentPaymentAmount || 0)
                                         ).toFixed(2)
                                     }}
                                 </strong>
@@ -509,7 +518,11 @@ onUnmounted(() => {
 const scrollToBottom = () => {
     if (cartItemsRef.value && cartItemsRef.value.scrollHeight !== undefined) {
         nextTick(() => {
-            if (cartItemsRef.value && cartItemsRef.value.scrollHeight !== undefined) {
+            if (
+                cartItemsRef.value &&
+                cartItemsRef.value.scrollHeight !== undefined &&
+                cartItemsRef.value.scrollHeight !== null
+            ) {
                 cartItemsRef.value.scrollTop = cartItemsRef.value.scrollHeight;
             }
         });

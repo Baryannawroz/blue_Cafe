@@ -1,29 +1,48 @@
 <template>
     <div class="main-content">
-
         <!-- Content Container -->
         <div class="content-container">
             <!-- Order Area -->
             <div class="order-area">
                 <MenuSection></MenuSection>
 
-                <OrderSummary v-if="!isMobile || isOrderSummaryVisible" :class="{'order-summery-on-mobile': !isMobile || isOrderSummaryVisible}"></OrderSummary>
-                <div class="mobile-overlay" @click="toggleOrderSummary" v-if="isMobile && isOrderSummaryVisible">
-                    <button type="button" class="mobile-overlay-close-btn">x</button>
+                <OrderSummary
+                    v-if="!isMobile || isOrderSummaryVisible"
+                    :class="{
+                        'order-summery-on-mobile':
+                            !isMobile || isOrderSummaryVisible,
+                    }"
+                ></OrderSummary>
+                <div
+                    class="mobile-overlay"
+                    @click="toggleOrderSummary"
+                    v-if="isMobile && isOrderSummaryVisible"
+                >
+                    <button type="button" class="mobile-overlay-close-btn">
+                        x
+                    </button>
                 </div>
 
-                <div class="mobile-order-button" @click="toggleOrderSummary" v-if="isMobile && !isOrderSummaryVisible">
-                    <div class="cart-badge" v-if="carts.length > 0">{{ carts.length }}</div>
+                <div
+                    class="mobile-order-button"
+                    @click="toggleOrderSummary"
+                    v-if="isMobile && !isOrderSummaryVisible"
+                >
+                    <div class="cart-badge" v-if="carts.length > 0">
+                        {{ carts.length }}
+                    </div>
                     <div class="mobile-button-content">
                         <span class="cart-icon">🛒</span>
                         <div class="button-text">
                             <div>Order</div>
-                            <div class="total-amount">{{ config.currency.symbol }}{{ finalTotal.toFixed(2) }}</div>
+                            <div class="total-amount">
+                                {{ config.currency.symbol
+                                }}{{ (finalTotal || 0).toFixed(2) }}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
 
         <Toast></Toast>
@@ -35,21 +54,21 @@ import OrderSummary from "./OrderSummary.vue";
 import MenuSection from "./MenuSection.vue";
 import Toast from "./Toast.vue";
 import useStore from "./useStore.js";
-import {onMounted, onUnmounted, ref} from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 
-const {carts, config, finalTotal} = useStore();
+const { carts, config, finalTotal } = useStore();
 
 const isMobile = ref(false);
 const isOrderSummaryVisible = ref(false);
 
 onMounted(() => {
     checkDeviceType();
-    window.addEventListener('resize', checkDeviceType);
+    window.addEventListener("resize", checkDeviceType);
 });
 
 // Clean up event listeners when component is unmounted
 onUnmounted(() => {
-    window.removeEventListener('resize', checkDeviceType);
+    window.removeEventListener("resize", checkDeviceType);
 });
 
 // Function to check if the device is mobile
@@ -59,8 +78,7 @@ const checkDeviceType = () => {
 
 const toggleOrderSummary = () => {
     isOrderSummaryVisible.value = !isOrderSummaryVisible.value;
-}
-
+};
 </script>
 
 <style scoped>
@@ -84,7 +102,6 @@ const toggleOrderSummary = () => {
     flex-grow: 1;
     overflow: hidden;
 }
-
 
 /* Mobile-specific styles */
 .mobile-order-button {
@@ -174,7 +191,8 @@ const toggleOrderSummary = () => {
     transition: all 0.2s ease;
 }
 
-.mobile-overlay-close-btn:hover, .mobile-overlay-close-btn:focus {
+.mobile-overlay-close-btn:hover,
+.mobile-overlay-close-btn:focus {
     transform: scale(1.05);
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }

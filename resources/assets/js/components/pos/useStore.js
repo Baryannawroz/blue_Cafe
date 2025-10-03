@@ -44,22 +44,30 @@ const createStore = () => {
     // Computed properties
     const getters = {
         subTotal: computed(() => {
-            return state.carts.value.reduce((total, item) => {
+            const total = state.carts.value.reduce((total, item) => {
                 const price = parseFloat(item.price || 0);
                 const discount = parseFloat(item.discount || 0);
                 const quantity = parseFloat(item.quantity || 0);
                 return total + (Math.ceil((price - price * discount / 100) / 250) * 250 * quantity);
             }, 0);
+            return isNaN(total) ? 0 : total;
         }),
 
         taxAmount: computed(() => {
-            const afterDiscountAmount = getters.subTotal.value - parseFloat(state.discountAmount.value || 0);
+            const subTotal = getters.subTotal.value || 0;
+            const discount = parseFloat(state.discountAmount.value || 0);
+            const afterDiscountAmount = subTotal - discount;
             const vatPercentage = parseFloat(state.config.value.vat?.vat_percentage || 0);
-            return afterDiscountAmount * (vatPercentage / 100);
+            const tax = afterDiscountAmount * (vatPercentage / 100);
+            return isNaN(tax) ? 0 : tax;
         }),
 
         finalTotal: computed(() => {
-            return getters.subTotal.value - parseFloat(state.discountAmount.value || 0) + getters.taxAmount.value;
+            const subTotal = getters.subTotal.value || 0;
+            const discount = parseFloat(state.discountAmount.value || 0);
+            const tax = getters.taxAmount.value || 0;
+            const total = subTotal - discount + tax;
+            return isNaN(total) ? 0 : total;
         }),
 
         filteredProducts: computed(() => {
