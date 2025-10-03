@@ -35,7 +35,16 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/time', function () {
-    return \Carbon\Carbon::now()->format('Y-m-d H:i:s');
+    // Set timezone explicitly to Baghdad
+    $baghdadTime = \Carbon\Carbon::now('Asia/Baghdad');
+
+    return [
+        'baghdad_time' => $baghdadTime->format('Y-m-d H:i:s'),
+        'timezone' => $baghdadTime->timezone->getName(),
+        'utc_offset' => $baghdadTime->format('P'),
+        'server_time' => date('Y-m-d H:i:s'),
+        'laravel_timezone' => config('app.timezone')
+    ];
 });
 
 Route::get('/', [WebsiteController::class, 'website']);
