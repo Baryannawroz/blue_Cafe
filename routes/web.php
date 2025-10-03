@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/time', function () {
-    return date('Y-m-d H:i:s');
+    return date('Y-m-d H:i:s'); 
 });
 
 Route::get('/', [WebsiteController::class, 'website']);
