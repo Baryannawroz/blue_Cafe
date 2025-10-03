@@ -13,7 +13,7 @@ $kitchen = \App\Models\User::where('role', 3)->get();
             </div>
             <div class="text-right">
                 <h3 class="text-dark"><b class="counter">
-                        <?php $orders = \App\Models\OrderDetails::where('created_at', 'like', \Carbon\Carbon::today()->format('Y-m-d') . '%')->get() ?>
+                        <?php $orders = \App\Models\OrderDetails::whereDate('created_at', \Carbon\Carbon::today()->format('Y-m-d') )->get() ?>
                         {{config('restaurant.currency.symbol')}}  {{number_format($orders->sum('gross_price'),1)}} {{config('restaurant.currency.currency')}}
                     </b></h3>
                 <p class="text-muted">Today's Sell</p>
