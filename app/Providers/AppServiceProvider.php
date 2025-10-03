@@ -22,9 +22,11 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
+        // Set application timezone to Baghdad
+        date_default_timezone_set('Asia/Baghdad');
+
         // Force MySQL session to Baghdad (+03:00)
         DB::statement("SET time_zone = '+03:00'");
-
 
         Blade::if('admin', function () {
             return auth()->check() && auth()->user()->role() == 1;
