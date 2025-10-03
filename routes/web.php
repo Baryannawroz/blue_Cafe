@@ -34,9 +34,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/time', function () {
-    return \Carbon\Carbon::now()->format('Y-m-d H:i:s'); 
-});
+
 
 Route::get('/', [WebsiteController::class, 'website']);
 Route::post('/installation-complete', [HomeController::class, 'installSuccess']);
@@ -272,5 +270,4 @@ Route::middleware('active.user')->group(function () {
         Route::get('/orders', [OrderController::class, 'getOrders']); // Added for order management
         Route::get('/dish-categories', [DishCategoryController::class, 'getDishCategories']);
     });
-
 });
