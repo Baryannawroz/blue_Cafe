@@ -13,7 +13,7 @@ $kitchen = \App\Models\User::where('role', 3)->get();
             </div>
             <div class="text-right">
                 <h3 class="text-dark"><b class="counter">
-                        {{ number_format($total_order_paid) }}
+                            {{ number_format($today_order->total_paid ) }}
                     </b></h3>
                 <p class="text-muted">Today's Sell</p>
             </div>
@@ -43,8 +43,7 @@ $kitchen = \App\Models\User::where('role', 3)->get();
             </div>
             <div class="text-right">
                 <h3 class="text-dark"><b class="counter">
-                        <?php $order = \App\Models\Order::where('created_at', 'like', \Carbon\Carbon::today('Asia/Baghdad')->format('Y-m-d') . '%')->get() ?>
-                        {{count($order)}}
+                       {{ $today_order->order_count }}
                     </b></h3>
                 <p class="text-muted">Today's Order</p>
             </div>
@@ -58,7 +57,7 @@ $kitchen = \App\Models\User::where('role', 3)->get();
             </div>
             <div class="text-right">
                 <h3 class="text-dark"><b class="counter">
-                        {{ number_format($total_order_paid-$today_expanse) }}
+                        {{ number_format($today_order->total_paid-$today_expanse ) }}
                     </b></h3>
                 <p class="text-muted">Today's Income</p>
             </div>
@@ -72,7 +71,7 @@ $kitchen = \App\Models\User::where('role', 3)->get();
             </div>
             <div class="text-right">
                 <h3 class="text-dark"><b class="counter">
-                        {{ number_format($total_order_paid-$total_expanse) }}
+                        {{ number_format($total_order_paid ) }}
                     </b></h3>
                 <p class="text-muted">qasa</p>
             </div>

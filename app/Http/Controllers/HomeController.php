@@ -22,11 +22,12 @@ class HomeController extends Controller
      */
     public function index(): Factory|View
     {
-        
+
         $today_expanse = OfficeExpanse::where('is_qasa', 0)->whereDate('date', Carbon::today())->sum('expanse');
         $total_expanse = OfficeExpanse::whereDate('date', '<', Carbon::today())->where('is_qasa', 0)->sum('expanse');
-        $total_order_paid = Order::whereDate('created_at','<', Carbon::today())->sum('payment');
-        $today_order = Order::whereDate('created_at', Carbon::today())
+        $total_order_paid = Order::whereDate('created_at','<', Carbon::today())->whereNotNull('payment')->sum('payment');
+       
+        $today_order = Order::whereDate('created_at', Carbon::today())->whereNotNull('payment')
             ->selectRaw('SUM(payment) as total_paid, COUNT(id) as order_count')
             ->first();
 
