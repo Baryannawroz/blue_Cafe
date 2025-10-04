@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
@@ -21,10 +22,10 @@ class HomeController extends Controller
      */
     public function index(): Factory|View
     {
-        $today_expanse = OfficeExpanse::where('is_qasa', 0)->whereDate('date', date('Y-m-d'))->sum('expanse');
-        $total_expanse = OfficeExpanse::whereDate('date', '<', date('Y-m-d'))->where('is_qasa', 0)->sum('expanse');
-        $total_order_paid = Order::whereDate('created_at','<', date('Y-m-d'))->sum('payment');
-        $today_order = Order::whereDate('created_at', date('Y-m-d'))
+        $today_expanse = OfficeExpanse::where('is_qasa', 0)->whereDate('date', Carbon::today())->sum('expanse');
+        $total_expanse = OfficeExpanse::whereDate('date', '<', Carbon::today())->where('is_qasa', 0)->sum('expanse');
+        $total_order_paid = Order::whereDate('created_at','<', Carbon::today())->sum('payment');
+        $today_order = Order::whereDate('created_at', Carbon::today())
             ->selectRaw('SUM(payment) as total_paid, COUNT(id) as order_count')
             ->first();
 
