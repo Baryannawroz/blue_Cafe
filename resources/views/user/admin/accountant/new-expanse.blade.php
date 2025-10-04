@@ -49,7 +49,7 @@ New Expense
             <div class="form-group">
                 <label for="date" class="col-sm-3 control-label">Date of Expense:</label>
                 <div class="col-sm-6">
-                    <input type="date" name="date" required class="form-control" placeholder="mm/dd/yyyy"
+                    <input type="date" name="date" value="{{ date('Y-m-d') }}" required class="form-control" placeholder="mm/dd/yyyy"
                         id="datepicker-autoclose">
                 </div>
             </div>
@@ -61,8 +61,17 @@ New Expense
                         id="amount" placeholder="Cost">
                 </div>
             </div>
+            <div class="form-group">
+                <label for="amount" class="col-sm-3 control-label">qasa or Casher:</label>
+                <div class="col-sm-6">
+             <select name="is_qas" id="" class="form-control">
+                 <option value="0">casher</option>
+                <option value="1">qasa</option>
+             </select>
+             </div>
+            </div>
 
-            <div class="form-group m-b-0">
+            <div class="form-group m-b-0 mt-2">
                 <div class="col-sm-offset-3 col-sm-9">
                     <button type="submit" class="btn btn-success waves-effect waves-light">Save now</button>
                 </div>

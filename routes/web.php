@@ -269,5 +269,6 @@ Route::middleware('active.user')->group(function () {
         Route::get('/config', [SettingsController::class, 'getConfig']);
         Route::get('/orders', [OrderController::class, 'getOrders']); // Added for order management
         Route::get('/dish-categories', [DishCategoryController::class, 'getDishCategories']);
+        Route::get('/users', [UserController::class, 'getUsers']); // Added for user selection
     });
 });

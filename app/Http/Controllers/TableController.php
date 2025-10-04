@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderDetails;
 use App\Models\Table;
 use Illuminate\Http\Request;
 
@@ -74,11 +75,19 @@ class TableController extends Controller
     }
     public function deleteOrderId($id)
     {
+        // Get the table to find the associated order
+        $table = Table::findOrFail($id);
 
+        if ($table->order_id) {
+            // Delete order details first (foreign key constraint)
+            OrderDetails::where('order_id', $table->order_id)->delete();
+
+            // Delete the order
+            Order::where('id', $table->order_id)->delete();
+        }
 
         // Set order_id to null for the given table
-        Table::where('id', $id)
-            ->update(['order_id' => null]);
+        Table::where('id', $id)->update(['order_id' => null]);
 
         return response()->json(['status' => 'success']);
     }
@@ -110,5 +119,4 @@ class TableController extends Controller
     {
         return response()->json(Table::all());
     }
-
 }

@@ -7,6 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    protected $fillable = [
+        'order_no',
+        'table_id',
+        'served_by',
+        'kitchen_id',
+        'user_id',
+        'status',
+        'payment',
+        'vat',
+        'change_amount',
+        'discount'
+    ];
+
     public function orderPrice()
     {
         return $this->hasMany(OrderDetails::class);
@@ -14,12 +27,12 @@ class Order extends Model
 
     public function servedBy()
     {
-        return $this->belongsTo(User::class,'served_by');
+        return $this->belongsTo(User::class, 'served_by');
     }
 
     public function kitchen()
     {
-        return $this->belongsTo(User::class,'kitchen_id');
+        return $this->belongsTo(User::class, 'kitchen_id');
     }
 
     public function table()

@@ -8,13 +8,12 @@ $kitchen = \App\Models\User::where('role', 3)->get();
 <div class="row">
     <div class="col-md-6 col-lg-4">
         <div class="widget-bg-color-icon card-box fadeInDown animated">
-            <div class="bg-icon bg-icon-info pull-left">
-                <i class="md md-attach-money text-info"></i>
+            <div class="bg-icon bg-icon-success pull-left">
+                <i class="md md-trending-up text-success"></i>
             </div>
             <div class="text-right">
                 <h3 class="text-dark"><b class="counter">
-                        <?php $orders = \App\Models\OrderDetails::whereDate('created_at', \Carbon\Carbon::today()->format('Y-m-d') )->get() ?>
-                        {{config('restaurant.currency.symbol')}}  {{number_format($orders->sum('gross_price'),1)}} {{config('restaurant.currency.currency')}}
+                        {{ number_format($total_order_paid) }}
                     </b></h3>
                 <p class="text-muted">Today's Sell</p>
             </div>
@@ -24,13 +23,12 @@ $kitchen = \App\Models\User::where('role', 3)->get();
 
     <div class="col-md-6 col-lg-4">
         <div class="widget-bg-color-icon card-box">
-            <div class="bg-icon bg-icon-pink pull-left">
-                <i class="md md-add-shopping-cart text-pink"></i>
+            <div class="bg-icon bg-icon-warning pull-left">
+                <i class="md md-remove-circle text-warning"></i>
             </div>
             <div class="text-right">
                 <h3 class="text-dark"><b class="counter">
-                        <?php $purses = \App\Models\OfficeExpanse::where('created_at', 'like', \Carbon\Carbon::today()->format('Y-m-d') . '%')->get() ?>
-                        {{config('restaurant.currency.symbol')}} {{number_format($purses->sum('expanse'),1)}} {{config('restaurant.currency.currency')}}
+                        {{config('restaurant.currency.symbol')}} {{number_format($today_expanse)}}
                     </b></h3>
                 <p class="text-muted">Today's expanse</p>
             </div>
@@ -40,8 +38,8 @@ $kitchen = \App\Models\User::where('role', 3)->get();
 
     <div class="col-md-6 col-lg-4">
         <div class="widget-bg-color-icon card-box">
-            <div class="bg-icon bg-icon-purple pull-left">
-                <i class="md md-equalizer text-purple"></i>
+            <div class="bg-icon bg-icon-info pull-left">
+                <i class="md md-receipt text-info"></i>
             </div>
             <div class="text-right">
                 <h3 class="text-dark"><b class="counter">
@@ -49,6 +47,34 @@ $kitchen = \App\Models\User::where('role', 3)->get();
                         {{count($order)}}
                     </b></h3>
                 <p class="text-muted">Today's Order</p>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+        <div class="widget-bg-color-icon card-box">
+            <div class="bg-icon bg-icon-success pull-left">
+                <i class="md md-account-balance-wallet text-success"></i>
+            </div>
+            <div class="text-right">
+                <h3 class="text-dark"><b class="counter">
+                        {{ number_format($total_order_paid-$today_expanse) }}
+                    </b></h3>
+                <p class="text-muted">Today's Income</p>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+        <div class="widget-bg-color-icon card-box">
+            <div class="bg-icon bg-icon-primary pull-left">
+                <i class="md md-account-balance text-primary"></i>
+            </div>
+            <div class="text-right">
+                <h3 class="text-dark"><b class="counter">
+                        {{ number_format($total_order_paid-$total_expanse) }}
+                    </b></h3>
+                <p class="text-muted">qasa</p>
             </div>
             <div class="clearfix"></div>
         </div>

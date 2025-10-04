@@ -85,7 +85,8 @@ class UserController extends Controller
         $user_in_unit = Unit::where('user_id', $id)->first();
         $user_in_employee = Employee::where('user_id', $id)->first();
 
-        if ($user_in_order || $user_in_dish || $user_id_product || $user_in_product_type || $user_in_purses
+        if (
+            $user_in_order || $user_in_dish || $user_id_product || $user_in_product_type || $user_in_purses
             || $user_in_puirses_payment || $user_in_recipe || $user_in_stock || $user_in_supplier || $user_in_tbale
             || $user_in_unit || $user_in_employee
         ) {
@@ -97,7 +98,6 @@ class UserController extends Controller
                 return redirect()->back()->with('delete_success', 'Employee has been deleted successfully');
             }
         }
-
     }
 
     /**
@@ -171,5 +171,19 @@ class UserController extends Controller
                 return response()->json('Ok', 200);
             }
         }
+    }
+
+    /**
+     * Get users for order selection (waiters, managers, kitchen staff)
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUsers()
+    {
+        $users = User::whereIn('role', [2, 3, 4]) // 2=manager, 3=kitchen, 4=waiter
+            ->where('active', 1)
+            ->select('id', 'name', 'role')
+            ->get();
+
+        return response()->json($users);
     }
 }

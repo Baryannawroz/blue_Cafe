@@ -16,7 +16,7 @@ class AccountantController extends Controller
      */
     public function addExpanse()
     {
-        return view('user.admin.accountant.new-expanse',[
+        return view('user.admin.accountant.new-expanse', [
             'account_menu'  =>  true,
             'reasons'  =>  Reason::all(),
         ]);
@@ -44,8 +44,9 @@ class AccountantController extends Controller
         $expanse->date = Carbon::parse($request->get('date'))->format('Y-m-d');
         $expanse->expanse = $request->get('expense');
         $expanse->user_id = auth()->user()->id;
-        if($expanse->save()){
-            return redirect('/all-expanse')->with('message', 'Your expense was saved successfully!');        }
+        if ($expanse->save()) {
+            return redirect('/all-expanse')->with('message', 'Your expense was saved successfully!');
+        }
     }
 
     /**
@@ -55,12 +56,12 @@ class AccountantController extends Controller
     public function allExpanse()
     {
         $office_expanse = OfficeExpanse::all();
-        $expanses = OfficeExpanse::where('id','!=',0)
+        $expanses = OfficeExpanse::where('id', '!=', 0)
             ->get()
-            ->groupBy(function ($data){
+            ->groupBy(function ($data) {
                 return $data->created_at->format('M-Y');
             });
-        return view('user.admin.accountant.all-expanse',[
+        return view('user.admin.accountant.all-expanse', [
             'office_expanse'    =>  $office_expanse,
             'account_menu'  =>  true,
             'expenses'      =>      $expanses
@@ -74,13 +75,13 @@ class AccountantController extends Controller
     public function allIncome()
     {
         $total_earn = Order::all();
-        $orders = Order::where('id','!=',0)
-            ->orderBy('id','desc')
+        $orders = Order::where('id', '!=', 0)
+            ->orderBy('id', 'desc')
             ->get()
-            ->groupBy(function ($data){
+            ->groupBy(function ($data) {
                 return $data->created_at->format('M-Y');
             });
-        return view('user.admin.accountant.all-income',[
+        return view('user.admin.accountant.all-income', [
             'orders'        =>  $orders,
             'total_earn'    =>  $total_earn
         ]);
@@ -89,13 +90,13 @@ class AccountantController extends Controller
     public function editExpanse($id)
     {
         $expanse = OfficeExpanse::findOrFail($id);
-        return view('user.admin.accountant.edit-expanse',[
+        return view('user.admin.accountant.edit-expanse', [
             'expanse'       =>      $expanse,
             'reasons'       =>      Reason::all()
         ]);
     }
 
-    public function updateExpanse(Request $request,$id)
+    public function updateExpanse(Request $request, $id)
     {
         $expanse =  OfficeExpanse::findOrFail($id);
         $expanse->title = $request->get('title');
@@ -103,7 +104,7 @@ class AccountantController extends Controller
         $expanse->date = Carbon::parse($request->get('date'))->format('Y-m-d');
         $expanse->expanse = $request->get('expanse');
         $expanse->user_id = auth()->user()->id;
-        if($expanse->save()){
+        if ($expanse->save()) {
             return  redirect('all-expanse');
         }
     }
@@ -111,9 +112,9 @@ class AccountantController extends Controller
     public function deleteExpanse($id)
     {
         $expanse =  OfficeExpanse::findOrFail($id);
-        if($expanse){
+        if ($expanse) {
             $expanse->delete();
-            return redirect()->back()->with('delete_success','Expanse has been deleted');
+            return redirect()->back()->with('delete_success', 'Expanse has been deleted');
         }
     }
 }

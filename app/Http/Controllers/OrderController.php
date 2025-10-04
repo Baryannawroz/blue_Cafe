@@ -31,19 +31,23 @@ class OrderController extends Controller
     {
         $tables = Table::all();
         $dishes = Dish::all();
+        $authUser = auth()->user();
         return view('user.waiter.order.add-order', [
             'tables' => $tables,
             'dishes' => $dishes,
-            'table_id' => $table_id
+            'table_id' => $table_id,
+            'authUser' => $authUser
         ]);
     }
     public function Order()
     {
         $tables = Table::all();
         $dishes = Dish::all();
+        $authUser = auth()->user();
         return view('user.waiter.order.order', [
             'tables' => $tables,
-            'dishes' => $dishes
+            'dishes' => $dishes,
+            'authUser' => $authUser
         ]);
     }
 
@@ -89,12 +93,18 @@ class OrderController extends Controller
         try {
             DB::beginTransaction();
 
+            // Debug: Check request data
+            $requestData = $request->all();
+            if (empty($requestData['items'])) {
+                return response()->json(['error' => 'No items in order'], 400);
+            }
+
             $lastOrder = Order::latest('id')->first();
             $orderNo = $lastOrder ? $lastOrder->order_no + 1 : 1001;
             $order = new Order();
             $order->order_no = $orderNo;
             $order->table_id = $request->table_id;
-            $order->served_by = auth()->user()->id;;
+            $order->served_by = $request->served_by ?? auth()->user()->id;
             $order->discount = $request->discount_amount;
             $order->payment = $request->payment;
             $order->vat = $request->vat;
@@ -156,7 +166,11 @@ class OrderController extends Controller
      */
     public function editOrder($id)
     {
-        $order = Order::findOrFail($id);
+        $order = Order::find($id);
+        if (!$order) {
+            Table::where('order_id', $id)->update(['order_id' => null]);
+            return redirect()->back()->with('error', 'Order not found');
+        }
         $dishes = Dish::all();
         return view('user.waiter.order.edit-order', [
             'order' => $order,
@@ -171,7 +185,10 @@ class OrderController extends Controller
      */
     public function getOrderDetails($id)
     {
-        $order = Order::with('orderDetails')->findOrFail($id);
+        $order = Order::with('orderDetails')
+            ->with('servedBy')
+            ->with('table')
+            ->findOrFail($id);
         return response()->json($order);
     }
 
@@ -206,7 +223,7 @@ class OrderController extends Controller
 
 
             $order->table_id = $request->table_id;
-            $order->served_by = auth()->user()->id;;
+            $order->served_by = $request->served_by ?? auth()->user()->id;
             $order->discount = $request->discount_amount;
             $order->payment = $request->payment;
             $order->vat = $request->vat;

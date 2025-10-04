@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\OfficeExpanse;
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -19,7 +21,14 @@ class HomeController extends Controller
      */
     public function index(): Factory|View
     {
-        return view('home');
+        $today_expanse = OfficeExpanse::where('is_qasa', 0)->whereDate('date', date('Y-m-d'))->sum('expanse');
+        $total_expanse = OfficeExpanse::whereDate('date', '<', date('Y-m-d'))->where('is_qasa', 0)->sum('expanse');
+        $total_order_paid = Order::whereDate('created_at', date('Y-m-d'))->sum('payment');
+        $today_order = Order::whereDate('created_at', date('Y-m-d'))
+            ->selectRaw('SUM(payment) as total_paid, COUNT(id) as order_count')
+            ->first();
+
+        return view('home', compact('today_expanse', 'total_expanse', 'total_order_paid', 'today_order'));
     }
 
 
@@ -82,7 +91,6 @@ class HomeController extends Controller
             if ($employee->save()) {
                 return response()->json('Ok', 200);
             }
-
         }
     }
 
@@ -123,6 +131,4 @@ class HomeController extends Controller
     {
         return view('install-success');
     }
-
-
 }

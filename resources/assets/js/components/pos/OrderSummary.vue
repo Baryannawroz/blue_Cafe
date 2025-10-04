@@ -17,6 +17,21 @@
                     >Change</span
                 >
             </div>
+            <div class="current-user">
+                <span id="current-user-display"
+                    >Waiter:
+                    <span v-if="selectedUser">{{
+                        selectedUser.name
+                    }}</span>
+                    <span v-else><i>No waiter selected</i></span>
+                </span>
+                <span
+                    class="change-user-btn"
+                    role="button"
+                    @click="userList = !userList"
+                    >Change</span
+                >
+            </div>
         </div>
 
         <!-- Table Selection Section (Initially Hidden) -->
@@ -43,6 +58,32 @@
                 >
                     <span class="status-indicator available"></span>
                     No table
+                </div>
+            </div>
+        </div>
+
+        <!-- User Selection Section (Initially Hidden) -->
+        <div class="user-selection" v-if="userList">
+            <h3>Select Waiter</h3>
+            <div class="user-grid">
+                <div
+                    class="user-item"
+                    v-for="(user, index) in users"
+                    :key="`user-${index}`"
+                    :class="{ selected: user?.id === selectedUser?.id }"
+                    @click="
+                        selectedUser = user;
+                        userList = !userList;
+                    "
+                >
+                    {{ user.name }}
+                </div>
+                <div
+                    class="user-item"
+                    @click="selectedUser = null"
+                    :class="{ selected: selectedUser === null }"
+                >
+                    No waiter
                 </div>
             </div>
         </div>
@@ -416,6 +457,7 @@ import { ref, computed, watch, nextTick, onMounted, onUnmounted } from "vue";
 // Initialize store
 const {
     tables,
+    users,
     carts,
     discountAmount,
     currentPaymentAmount,
@@ -423,6 +465,7 @@ const {
     taxAmount,
     finalTotal,
     selectedTable,
+    selectedUser,
     isOrderModalVisible,
     deleteProductFromCart,
     updateCartItemQuantity,
@@ -432,6 +475,7 @@ const {
 } = useStore();
 
 const tableList = ref(false);
+const userList = ref(false);
 const discountType = ref("percentage"); // 'percentage' or 'fixed'
 const discountValue = ref(0);
 const appliedDiscount = ref(0);
@@ -635,6 +679,59 @@ watch(
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
+}
+
+.user-selection {
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    display: block;
+}
+
+.user-selection h3 {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.user-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.user-item {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    background-color: #f9f9f9;
+    transition: all 0.2s ease;
+}
+
+.user-item:hover {
+    background-color: #e9f4ff;
+    border-color: #007bff;
+}
+
+.user-item.selected {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.change-user-btn {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.change-user-btn:hover {
+    background-color: #f0f7fc;
 }
 
 .table-item {

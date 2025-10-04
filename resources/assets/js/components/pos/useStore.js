@@ -27,10 +27,12 @@ const createStore = () => {
         tables: ref([]),
         products: ref([]),
         productCategories: ref([]),
+        users: ref([]),
         discountAmount: ref(0),
         currentPaymentAmount: ref(''),
         updateOrder: ref(null),
         selectedTable: ref(null),
+        selectedUser: ref(null),
         searchString: ref(''),
         isOrderModalVisible: ref(false),
         toastMessage: ref(''),
@@ -118,6 +120,24 @@ const createStore = () => {
             }
         },
 
+        async fetchUsers() {
+            try {
+                console.log('Starting to fetch users...');
+                state.isLoading.value = true;
+                const response = await axios.get('/web-api/users');
+                console.log('Users API response:', response);
+                console.log('Users data:', response.data);
+                state.users.value = response.data;
+                console.log('Users state updated:', state.users.value);
+            } catch (err) {
+                console.error('Error fetching users:', err);
+                console.error('Error details:', err.response);
+                actions.showToast("Failed to load users", 3000);
+            } finally {
+                state.isLoading.value = false;
+            }
+        },
+
         async fetchDishCategories() {
             try {
                 state.isLoading.value = true;
@@ -166,6 +186,20 @@ const createStore = () => {
                     state.selectedTable.value = state.tables.value.find(el => el.id == response.data.table_id) || null;
                 }
 
+                // Set the selected user based on served_by information
+                if (response.data?.served_by && state.users.value.length > 0) {
+                    console.log('Setting user from order record:', response.data.served_by);
+                    // Handle both cases: served_by as object or as integer ID
+                    const servedById = response.data.served_by.id || response.data.served_by;
+                    const user = state.users.value.find(el => el.id == servedById);
+                    if (user) {
+                        state.selectedUser.value = user;
+                        console.log('User set to:', user);
+                    } else {
+                        console.warn('User not found in available users:', servedById);
+                    }
+                }
+
                 state.discountAmount.value = response.data.discount || 0;
 
             } catch (err) {
@@ -194,6 +228,32 @@ const createStore = () => {
 
         clearSelectedTable() {
             state.selectedTable.value = null;
+        },
+
+        setSelectedUserById(userId) {
+            console.log('setSelectedUserById called with userId:', userId);
+            console.log('Available users:', state.users.value);
+            console.log('Users length:', state.users.value.length);
+
+            if (!state.users.value.length) {
+                console.warn('Users not loaded yet');
+                return false;
+            }
+
+            const user = state.users.value.find(u => u.id === userId);
+            console.log('Found user:', user);
+            if (user) {
+                state.selectedUser.value = user;
+                console.log('Selected user set to:', state.selectedUser.value);
+                return true;
+            }
+
+            console.warn(`User with ID ${userId} not found`);
+            return false;
+        },
+
+        clearSelectedUser() {
+            state.selectedUser.value = null;
         },
 
         addProductToCart(product, selectedVariant = null) {
@@ -282,6 +342,7 @@ const total = state.carts.value.reduce((sum, item) => {
 
             const orderData = {
                 table_id: state.selectedTable.value?.id || null,
+                served_by: state.selectedUser.value?.id || null,
                 payment:orderComplete ? total : state.currentPaymentAmount.value || null,
                 vat: getters.taxAmount.value || 0,
                 change_amount: state.currentPaymentAmount.value ?
@@ -297,7 +358,9 @@ const total = state.carts.value.reduce((sum, item) => {
                     gross_price: item.price * item.quantity,
                 }))
             };
-            console.log(orderData);
+            console.log('Order data being sent:', orderData);
+            console.log('Selected user:', state.selectedUser.value);
+            console.log('Served by ID:', state.selectedUser.value?.id);
 
 
             try {
@@ -427,7 +490,8 @@ const total = state.carts.value.reduce((sum, item) => {
                     actions.fetchProducts(),
                     actions.fetchTables(),
                     actions.fetchConfig(),
-                    actions.fetchDishCategories()
+                    actions.fetchDishCategories(),
+                    actions.fetchUsers()
                 ]);
 
                 // Set initial table from URL parameter or default
@@ -436,6 +500,26 @@ const total = state.carts.value.reduce((sum, item) => {
 
                 if (tableIdParam) {
                     actions.setSelectedTableById(Number(tableIdParam));
+                }
+
+                // Set authenticated user as default selected user
+                console.log('Setting authenticated user as default:', window.authUser);
+                if (window.authUser && window.authUser.id) {
+                    console.log('Auth user ID:', window.authUser.id);
+                    console.log('Available users:', state.users.value);
+                    const userSet = actions.setSelectedUserById(window.authUser.id);
+                    if (!userSet) {
+                        console.warn('Failed to set authenticated user, retrying...');
+                        // Retry after a short delay
+                        setTimeout(() => {
+                            console.log('Retrying to set authenticated user...');
+                            actions.setSelectedUserById(window.authUser.id);
+                        }, 100);
+                    } else {
+                        console.log('Successfully set authenticated user as default');
+                    }
+                } else {
+                    console.warn('No authenticated user found in window.authUser:', window.authUser);
                 }
 
                 if (window.editOrderId) {
