@@ -23,7 +23,7 @@ class HomeController extends Controller
     {
         $today_expanse = OfficeExpanse::where('is_qasa', 0)->whereDate('date', date('Y-m-d'))->sum('expanse');
         $total_expanse = OfficeExpanse::whereDate('date', '<', date('Y-m-d'))->where('is_qasa', 0)->sum('expanse');
-        $total_order_paid = Order::whereDate('created_at', date('Y-m-d'))->sum('payment');
+        $total_order_paid = Order::whereDate('created_at','<', date('Y-m-d'))->sum('payment');
         $today_order = Order::whereDate('created_at', date('Y-m-d'))
             ->selectRaw('SUM(payment) as total_paid, COUNT(id) as order_count')
             ->first();
