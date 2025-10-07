@@ -178,7 +178,8 @@ const createStore = () => {
                     quantity: item.quantity,
                     note: item.note,
                     discount: item.discount,
-                    image: item.dish?.thumbnail
+                    image: item.dish?.thumbnail,
+                    is_printed: Boolean(item.is_printed)
                 }));
 
                 state.carts.value = order;
@@ -259,7 +260,7 @@ const createStore = () => {
         addProductToCart(product, selectedVariant = null) {
             const variant = selectedVariant || product.dish_prices[0];
             const existingIndex = state.carts.value.findIndex(item =>
-                item.productId === product.id && item.variantId === variant.id
+                item.productId === product.id && item.variantId === variant.id && item.is_printed === false
             );
 
             if (existingIndex !== -1) {
@@ -276,6 +277,7 @@ const createStore = () => {
                     image: product.thumbnail,
                     note: ``,
                     discount:0,
+                    is_printed: false,
 
                 });
             }
@@ -356,6 +358,7 @@ const total = state.carts.value.reduce((sum, item) => {
                     note: item.note,
                     discount: item.discount,
                     gross_price: item.price * item.quantity,
+                    is_printed: item.is_printed,
                 }))
             };
             console.log('Order data being sent:', orderData);

@@ -131,6 +131,7 @@ class OrderController extends Controller
                 $orderDetail->quantity = $item['quantity'];
                 $orderDetail->net_price = $dishType->price;
                 $orderDetail->gross_price = $item['quantity'] * $dishType->price;
+                $orderDetail->is_printed = $item['is_printed'] ?? false;
                 if ($orderDetail->save()) {
                     foreach ($dishType->recipes as $recipe) {
                         $cookedProduct = new CookedProduct();
@@ -247,6 +248,7 @@ class OrderController extends Controller
                 $orderDetail->quantity = $item['quantity'];
                 $orderDetail->net_price = $dishType->price;
                 $orderDetail->gross_price = $item['quantity'] * ceil(($dishType->price - $dishType->price * $item['discount'] / 100) / 250) * 250;
+                $orderDetail->is_printed = $item['is_printed'] ?? false;
                 if ($orderDetail->save()) {
                     foreach ($dishType->recipes as $recipe) {
                         $cookedProduct = new CookedProduct();

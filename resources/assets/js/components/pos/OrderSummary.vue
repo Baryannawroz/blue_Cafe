@@ -219,6 +219,16 @@
                             class="note-input"
                         />
                     </div>
+                    <div class="print-section">
+                        <label class="print-checkbox-label">
+                            <input
+                                type="checkbox"
+                                v-model="cart.is_printed"
+                                class="print-checkbox"
+                            />
+                            <span class="print-text">complete</span>
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -998,6 +1008,32 @@ watch(
     border-color: #4299e1;
     background: #ffffff;
     box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+.print-section {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.print-checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 12px;
+    color: #4a5568;
+    gap: 6px;
+}
+
+.print-checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: #4299e1;
+    cursor: pointer;
+}
+
+.print-text {
+    font-weight: 500;
+    user-select: none;
 }
 
 .discount-section {

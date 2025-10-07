@@ -329,6 +329,11 @@
             </thead>
             <tbody>
                 @foreach($order->orderPrice as $index => $orderDetails)
+                @continue($orderDetails->is_printed == 1)
+                @php
+                    $orderDetails->is_printed = 1;
+                    $orderDetails->save();
+                @endphp
                 <tr>
 
                     <td class="description qty">

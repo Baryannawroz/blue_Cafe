@@ -14,7 +14,8 @@ class OrderDetails extends Model
         'net_price',
         'gross_price',
         'note',
-        'discount'
+        'discount',
+        'is_printed'
     ];
 
     public function dish()
