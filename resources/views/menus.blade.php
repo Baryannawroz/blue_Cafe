@@ -77,7 +77,6 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
                                 loading="lazy"
                                 decoding="async">
                         </a>
-                        <div class="image-overlay-gradient"></div>
                         @if($dish->dishPrices->count() > 0)
                         @php
                         $minPrice = $dish->dishPrices->min('price');
@@ -115,24 +114,6 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
                         @endif
 
                     </div>
-
-                    <!-- Hidden data for modal -->
-                    <div class="dish-data" style="display: none;">
-                        <div class="dish-images-data">
-                            @foreach($dish->dishImages as $image)
-                            <div class="dish-image-item" data-image="{{ $image->image }}"
-                                data-title="{{ $image->title }}">
-                            </div>
-                            @endforeach
-                        </div>
-                        <div class="dish-prices-data">
-                            @foreach($dish->dishPrices as $price)
-                            <div class="dish-price-item" data-type="{{ $price->dish_type }}"
-                                data-price="{{ $price->price }}">
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
                 </div>
             </div>
             @endforeach
@@ -153,97 +134,9 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
     </div>
 </section>
 
-<!-- Modern Dish Modal -->
-<div class="modal fade" id="dishModal" tabindex="-1" aria-labelledby="dishModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content modern-modal">
-            <div class="modal-header">
-                <h5 class="modal-title" id="dishModalLabel">
-                    <i class="bi bi-egg-fried me-2"></i>
-                    <span id="modalDishName">Dish Details</span>
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row g-4">
-                    <div class="col-lg-6">
-                        <!-- Main Image -->
-                        <div class="main-image-container">
-                            <img src="" id="dishMainImage" class="img-fluid rounded-3" alt="Dish Image">
-                            <div class="image-overlay">
-                                <button class="btn btn-light btn-sm" onclick="openLightbox()">
-                                    <i class="bi bi-zoom-in me-1"></i>
-                                    View Full Size
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Portion Options -->
-                        <div class="portion-options-section mt-4">
-                            <h6 class="section-title">
-                                <i class="bi bi-list-ul me-2"></i>
-                                Available Portions
-                            </h6>
-                            <div class="portion-options-grid" id="portionOptions">
-                                <!-- Portion options will be populated here -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <!-- Dish Gallery -->
-                        <div class="gallery-section">
-                            <h6 class="section-title">
-                                <i class="bi bi-images me-2"></i>
-                                More Photos
-                            </h6>
-                            <div class="gallery-grid" id="dishGallery">
-                                <!-- Gallery images will be populated here -->
-                            </div>
-                        </div>
-
-                        <!-- Dish Information -->
-                        <div class="dish-info-section mt-4">
-                            <h6 class="section-title">
-                                <i class="bi bi-info-circle me-2"></i>
-                                Dish Information
-                            </h6>
-                            <div class="info-card">
-                                <div class="info-item">
-                                    <i class="bi bi-clock me-2"></i>
-                                    <span>Freshly prepared daily</span>
-                                </div>
-                                <div class="info-item">
-                                    <i class="bi bi-heart me-2"></i>
-                                    <span>Made with love and care</span>
-                                </div>
-                                <div class="info-item">
-                                    <i class="bi bi-shield-check me-2"></i>
-                                    <span>Quality guaranteed</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x-lg me-1"></i>
-                    Close
-                </button>
-                <button type="button" class="btn btn-primary" onclick="contactForOrder()">
-                    <i class="bi bi-telephone me-1"></i>
-                    Contact for Order
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Modern JavaScript Functionality -->
 <script>
     // Global variables
-    let currentLightboxImage = '';
     let allDishes = [];
     let imageObserver = null;
 
@@ -347,24 +240,14 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
 
             if (isVisible) {
                 item.style.display = 'block';
-                item.style.opacity = '0';
-                item.style.transform = 'translateY(20px)';
                 
                 // Re-initialize lazy loading for visible items
-                setTimeout(() => {
-                    const lazyImages = item.querySelectorAll('.lazy-load[data-src]');
-                    if (imageObserver && lazyImages.length > 0) {
-                        lazyImages.forEach(img => {
-                            imageObserver.observe(img);
-                        });
-                    }
-                }, 100);
-                
-                setTimeout(() => {
-                    item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-                    item.style.opacity = '1';
-                    item.style.transform = 'translateY(0)';
-                }, 50 * visibleCount);
+                const lazyImages = item.querySelectorAll('.lazy-load[data-src]');
+                if (imageObserver && lazyImages.length > 0) {
+                    lazyImages.forEach(img => {
+                        imageObserver.observe(img);
+                    });
+                }
                 
                 visibleCount++;
             } else {
@@ -402,24 +285,14 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
             
             if (isVisible) {
                 item.style.display = 'block';
-                item.style.opacity = '0';
-                item.style.transform = 'translateY(20px)';
                 
                 // Re-initialize lazy loading for visible items
-                setTimeout(() => {
-                    const lazyImages = item.querySelectorAll('.lazy-load[data-src]');
-                    if (imageObserver && lazyImages.length > 0) {
-                        lazyImages.forEach(img => {
-                            imageObserver.observe(img);
-                        });
-                    }
-                }, 100);
-                
-                setTimeout(() => {
-                    item.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-                    item.style.opacity = '1';
-                    item.style.transform = 'translateY(0)';
-                }, 50 * visibleCount);
+                const lazyImages = item.querySelectorAll('.lazy-load[data-src]');
+                if (imageObserver && lazyImages.length > 0) {
+                    lazyImages.forEach(img => {
+                        imageObserver.observe(img);
+                    });
+                }
                 
                 visibleCount++;
             } else {
@@ -436,268 +309,23 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
     }
 
     function animateMenuItems() {
+        // Simplified - no delays, instant render for better performance
         const menuItems = document.querySelectorAll('.menu-item');
-        menuItems.forEach((item, index) => {
-            item.style.opacity = '0';
-            item.style.transform = 'translateY(30px)';
-
-            setTimeout(() => {
-                item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                item.style.opacity = '1';
-                item.style.transform = 'translateY(0)';
-            }, 100 * index);
+        menuItems.forEach((item) => {
+            item.style.opacity = '1';
+            item.style.transform = 'translateY(0)';
         });
     }
 
-    function showDishModal(dishId) {
-        const menuItem = document.querySelector(`[data-dish-id="${dishId}"]`);
-        if (!menuItem) return;
-
-        const dishName = menuItem.querySelector('.dish-title').textContent;
-        const dishImage = menuItem.querySelector('.premium-card-img').src;
-        const dishData = menuItem.querySelector('.dish-data');
-
-        // Update modal content
-        document.getElementById('modalDishName').textContent = dishName;
-        document.getElementById('dishMainImage').src = dishImage;
-        currentLightboxImage = dishImage;
-
-        // Populate portion options
-        populatePortionOptions(dishData);
-
-        // Populate gallery
-        populateGallery(dishData, dishImage, dishName);
-
-        // Show modal
-        const modal = new bootstrap.Modal(document.getElementById('dishModal'));
-        modal.show();
-    }
-
-    function populatePortionOptions(dishData) {
-        const portionOptionsContainer = document.getElementById('portionOptions');
-        const priceItems = dishData.querySelectorAll('.dish-price-item');
-
-        portionOptionsContainer.innerHTML = '';
-
-        priceItems.forEach(item => {
-            const type = item.dataset.type;
-            const price = item.dataset.price;
-
-            const optionDiv = document.createElement('div');
-            optionDiv.className = 'portion-option-card';
-            optionDiv.innerHTML = `
-                <div class="portion-info">
-                    <h6 class="portion-type">${type}</h6>
-                    <span class="portion-price">${parseInt(price).toLocaleString()} IQD</span>
-                </div>
-            `;
-
-            portionOptionsContainer.appendChild(optionDiv);
-        });
-    }
-
-    function populateGallery(dishData, mainImage, dishName) {
-        const galleryContainer = document.getElementById('dishGallery');
-        const imageItems = dishData.querySelectorAll('.dish-image-item');
-
-        galleryContainer.innerHTML = '';
-
-        // Add main image as first gallery item
-        if (mainImage) {
-            addGalleryImage(mainImage, dishName, galleryContainer);
-        }
-
-        // Add additional images
-        imageItems.forEach(item => {
-            const imageSrc = item.dataset.image;
-            const imageTitle = item.dataset.title || dishName;
-            addGalleryImage(imageSrc, imageTitle, galleryContainer);
-        });
-    }
-
-    function addGalleryImage(imageSrc, imageTitle, container) {
-        const galleryItem = document.createElement('div');
-        galleryItem.className = 'gallery-item';
-        galleryItem.innerHTML = `
-            <img src="${imageSrc}" alt="${imageTitle}" class="img-fluid">
-            <div class="gallery-overlay">
-                <i class="bi bi-zoom-in"></i>
-            </div>
-        `;
-
-        galleryItem.addEventListener('click', function() {
-            document.getElementById('dishMainImage').src = imageSrc;
-            currentLightboxImage = imageSrc;
-        });
-
-        container.appendChild(galleryItem);
-    }
-
-    function openLightbox() {
-        if (currentLightboxImage) {
-            // Create a temporary link for GLightbox
-            const tempLink = document.createElement('a');
-            tempLink.href = currentLightboxImage;
-            tempLink.className = 'glightbox';
-            tempLink.click();
-        }
-    }
-
-    function contactForOrder() {
-        // You can customize this function to redirect to contact page or show contact info
-        alert('Please contact us to place your order!');
-    }
-
+    // Initialize GLightbox for image viewing
     document.addEventListener('DOMContentLoaded', function () {
-        // Initialize GLightbox
-        const lightbox = GLightbox({
-            selector: '.glightbox',
-            touchNavigation: true,
-            loop: true,
-            autoplayVideos: true
-        });
-
-        // Get all menu items
-        const menuItems = document.querySelectorAll('.menu-item-simple');
-
-        // Add click event to each menu item
-        menuItems.forEach(item => {
-            item.addEventListener('click', function (e) {
-                // Don't trigger modal if clicking on the image (let GLightbox handle it)
-                if (e.target.closest('.glightbox')) {
-                    return;
-                }
-
-                // Get parent container with dish ID
-                const menuItemContainer = this.closest('[data-dish-id]');
-                const dishId = menuItemContainer ? menuItemContainer.dataset.dishId : null;
-
-                // Get dish information from the clicked item
-                const dishName = this.querySelector('h5').textContent;
-                const dishImage = this.querySelector('.menu-img')?.src || this.querySelector('img')?.src;
-
-                // Get dish price options (we'll need to fetch this from the server or store it differently)
-                const dishOptions = this.querySelectorAll('.portion-option') || [];
-
-                // Find the modal elements
-                const modal = document.getElementById('dishModal');
-                const modalTitle = modal.querySelector('.modal-title');
-                const modalImage = document.getElementById('dishMainImage');
-                const modalOptions = modal.querySelector('.dish-options');
-                const modalGallery = modal.querySelector('.dish-gallery');
-
-                // Set the modal content
-                modalTitle.textContent = dishName;
-                modalImage.src = dishImage;
-                modalImage.alt = dishName;
-
-                // Clear previous options and gallery
-                modalOptions.innerHTML = '';
-                modalGallery.innerHTML = '';
-
-                // Since we simplified the display, we'll show a simple message about pricing
-                const optionsList = document.createElement('div');
-                optionsList.className = 'd-flex flex-column gap-2';
-
-                const infoDiv = document.createElement('div');
-                infoDiv.className = 'p-3 bg-light rounded';
-                infoDiv.style.border = '1px solid #dee2e6';
-                infoDiv.innerHTML = `
-                    <div class="text-center">
-                        <i class="bi bi-info-circle text-primary mb-2" style="font-size: 2rem;"></i>
-                        <h6 class="mb-2">Dish Information</h6>
-                        <p class="mb-0 text-muted">Click on the image to view larger version. Contact us for detailed pricing options.</p>
-                    </div>
-                `;
-
-                modalOptions.appendChild(infoDiv);
-
-                // Get dish images from the hidden data div
-                let dishImages = [];
-                const dishImagesData = this.querySelector('.dish-images-data');
-
-                if (dishImagesData) {
-                    const imageItems = dishImagesData.querySelectorAll('.dish-image-item');
-                    imageItems.forEach(item => {
-                        dishImages.push({
-                            image: item.dataset.image,
-                            title: item.dataset.title
-                        });
-                    });
-                }
-
-                // If no images found in the hidden div, check for dish images elsewhere
-                if (dishImages.length === 0) {
-                    // Try to find dish images by dish ID
-                    if (dishId) {
-                        // Find the dish images container for this dish
-                        const imagesContainer = document.querySelector(`[data-dish-id="${dishId}"] .dish-images-data`);
-                        if (imagesContainer) {
-                            const imageItems = imagesContainer.querySelectorAll('.dish-image-item');
-                            imageItems.forEach(item => {
-                                dishImages.push({
-                                    image: item.dataset.image,
-                                    title: item.dataset.title
-                                });
-                            });
-                        }
-                    }
-                }
-
-                // If still no images found, use the main image as fallback
-                if (dishImages.length === 0) {
-                    dishImages = [
-                        { image: dishImage, title: dishName },
-                        { image: dishImage, title: dishName },
-                        { image: dishImage, title: dishName }
-                    ];
-                }
-
-                // Add gallery images to modal with improved styling
-                dishImages.forEach(img => {
-                    const colDiv = document.createElement('div');
-                    colDiv.className = 'col-6 mb-3';
-
-                    const imgContainer = document.createElement('div');
-                    imgContainer.style.overflow = 'hidden';
-                    imgContainer.style.borderRadius = '10px';
-                    imgContainer.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
-                    imgContainer.style.cursor = 'pointer';
-                    imgContainer.title = img.title || dishName;
-
-                    const imgElement = document.createElement('img');
-                    imgElement.src = img.image;
-                    imgElement.className = 'img-fluid w-100';
-                    imgElement.style.height = '140px';
-                    imgElement.style.objectFit = 'cover';
-                    imgElement.style.transition = 'transform 0.3s ease';
-                    imgElement.alt = img.title || dishName;
-
-                    // Add hover effect to gallery images
-                    imgContainer.addEventListener('mouseover', function () {
-                        imgElement.style.transform = 'scale(1.1)';
-                    });
-
-                    imgContainer.addEventListener('mouseout', function () {
-                        imgElement.style.transform = 'scale(1)';
-                    });
-
-                    // Make gallery image clickable to show as main image
-                    imgContainer.addEventListener('click', function() {
-                        modalImage.src = img.image;
-                        modalImage.alt = img.title || dishName;
-                    });
-
-                    imgContainer.appendChild(imgElement);
-                    colDiv.appendChild(imgContainer);
-                    modalGallery.appendChild(colDiv);
-                });
-
-                // Open the modal
-                const bsModal = new bootstrap.Modal(modal);
-                bsModal.show();
+        if (typeof GLightbox !== 'undefined') {
+            GLightbox({
+                selector: '.glightbox',
+                touchNavigation: true,
+                loop: true
             });
-        });
+        }
     });
 </script>
 
@@ -898,21 +526,6 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
         transform: scale(1.15);
     }
 
-    .image-overlay-gradient {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .premium-menu-card:hover .image-overlay-gradient {
-        opacity: 1;
-    }
-
     /* Premium Price Tag */
     .premium-price-tag {
         position: absolute;
@@ -1065,176 +678,6 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
         }
     }
 
-    /* Modal Styles */
-    .modern-modal {
-        border-radius: 20px;
-        border: none;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
-    }
-
-    .modern-modal .modal-header {
-        background: linear-gradient(135deg, #007bff, #0056b3);
-        color: white;
-        border-radius: 20px 20px 0 0;
-        padding: 20px 30px;
-        border: none;
-    }
-
-    .modern-modal .modal-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-    }
-
-    .modern-modal .modal-body {
-        padding: 30px;
-    }
-
-    .modern-modal .modal-footer {
-        border-top: 1px solid #e9ecef;
-        padding: 20px 30px;
-        border-radius: 0 0 20px 20px;
-    }
-
-    .main-image-container {
-        position: relative;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    }
-
-    .main-image-container img {
-        width: 100%;
-        height: 100%;
-        aspect-ratio: 16 / 9;
-        object-fit: cover;
-        object-position: center center;
-        display: block;
-    }
-
-    .image-overlay {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .main-image-container:hover .image-overlay {
-        opacity: 1;
-    }
-
-    .section-title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #2c3e50;
-        margin-bottom: 15px;
-        padding-bottom: 8px;
-        border-bottom: 2px solid #007bff;
-        display: inline-block;
-    }
-
-    .portion-options-grid {
-        display: grid;
-        gap: 10px;
-    }
-
-    .portion-option-card {
-        background: #f8f9fa;
-        border: 2px solid #e9ecef;
-        border-radius: 12px;
-        padding: 15px;
-        transition: all 0.3s ease;
-    }
-
-    .portion-option-card:hover {
-        border-color: #007bff;
-        background: #f0f8ff;
-        transform: translateX(5px);
-    }
-
-    .portion-type {
-        font-weight: 600;
-        color: #2c3e50;
-        margin-bottom: 5px;
-    }
-
-    .portion-price {
-        font-weight: 700;
-        color: #007bff;
-        font-size: 1.1rem;
-    }
-
-    .gallery-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        gap: 10px;
-    }
-
-    .gallery-item {
-        position: relative;
-        border-radius: 10px;
-        overflow: hidden;
-        cursor: pointer;
-        transition: transform 0.3s ease;
-    }
-
-    .gallery-item:hover {
-        transform: scale(1.05);
-    }
-
-    .gallery-item img {
-        width: 100%;
-        height: 100%;
-        aspect-ratio: 1 / 1;
-        object-fit: cover;
-        object-position: center center;
-        display: block;
-    }
-
-    .gallery-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .gallery-item:hover .gallery-overlay {
-        opacity: 1;
-    }
-
-    .gallery-overlay i {
-        color: white;
-        font-size: 1.5rem;
-    }
-
-    .info-card {
-        background: #f8f9fa;
-        border-radius: 12px;
-        padding: 20px;
-    }
-
-    .info-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-        color: #6c757d;
-    }
-
-    .info-item:last-child {
-        margin-bottom: 0;
-    }
-
-    .info-item i {
-        color: #007bff;
-        margin-right: 10px;
-    }
 
     /* No Results Styling */
     .no-results-icon {
@@ -1256,17 +699,6 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
             font-size: 0.9rem;
         }
 
-        .modern-modal .modal-body {
-            padding: 20px;
-        }
-
-        .gallery-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .main-image-container img {
-            aspect-ratio: 4 / 3;
-        }
     }
 
     @media (max-width: 576px) {
@@ -1288,9 +720,6 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
             aspect-ratio: 3 / 4;
         }
 
-        .main-image-container img {
-            aspect-ratio: 1 / 1;
-        }
     }
 
     /* Animation Classes */
