@@ -94,12 +94,6 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
                             </span>
                         </div>
                         @endif
-                        <div class="card-hover-overlay">
-                            <button class="premium-view-btn" onclick="showDishModal({{ $dish->id }})">
-                                <i class="bi bi-eye"></i>
-                                <span>View Details</span>
-                            </button>
-                        </div>
                     </div>
 
                     <div class="premium-card-content">
@@ -947,46 +941,6 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
         font-weight: 800;
     }
 
-    /* Hover Overlay */
-    .card-hover-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: opacity 0.4s ease;
-    }
-
-    .premium-menu-card:hover .card-hover-overlay {
-        opacity: 1;
-    }
-
-    .premium-view-btn {
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        color: white;
-        padding: 12px 24px;
-        border-radius: 25px;
-        font-weight: 600;
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .premium-view-btn:hover {
-        background: rgba(255, 255, 255, 0.3);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-    }
 
     /* Premium Card Content */
     .premium-card-content {
