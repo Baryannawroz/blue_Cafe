@@ -69,8 +69,13 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
                 <div class="premium-menu-card h-100">
                     <div class="card-image-wrapper">
                         <a href="{{ $dish->thumbnail }}" class="glightbox">
-                            <img src="{{ $dish->thumbnail }}" class="premium-card-img" alt="{{ $dish->dish }}"
-                                loading="lazy">
+                            <img 
+                                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='533'%3E%3Crect fill='%231a1a2e' width='400' height='533'/%3E%3C/svg%3E" 
+                                data-src="{{ $dish->thumbnail }}" 
+                                class="premium-card-img lazy-load" 
+                                alt="{{ $dish->dish }}"
+                                loading="lazy"
+                                decoding="async">
                         </a>
                         <div class="image-overlay-gradient"></div>
                         @if($dish->dishPrices->count() > 0)
@@ -246,13 +251,69 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
     // Global variables
     let currentLightboxImage = '';
     let allDishes = [];
+    let imageObserver = null;
 
     // Initialize when DOM is loaded
     document.addEventListener('DOMContentLoaded', function() {
         initializeMenu();
         setupSearch();
         setupCategoryFilter();
+        initializeLazyLoading();
     });
+
+    // Advanced Lazy Loading with Intersection Observer
+    function initializeLazyLoading() {
+        // Check if IntersectionObserver is supported
+        if ('IntersectionObserver' in window) {
+            // Create observer only once
+            if (!imageObserver) {
+                imageObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            if (img.dataset.src) {
+                                // Load the image
+                                const imageSrc = img.dataset.src;
+                                img.src = imageSrc;
+                                img.classList.remove('lazy-load');
+                                
+                                // Fade in once loaded
+                                img.onload = () => {
+                                    img.style.opacity = '1';
+                                };
+                                
+                                // Handle loading errors
+                                img.onerror = () => {
+                                    img.style.opacity = '0.5';
+                                };
+                                
+                                observer.unobserve(img);
+                            }
+                        }
+                    });
+                }, {
+                    rootMargin: '100px' // Start loading 100px before image enters viewport
+                });
+            }
+
+            // Observe all lazy images that aren't already being observed
+            document.querySelectorAll('.lazy-load[data-src]').forEach(img => {
+                // Only observe if image is visible or will be visible soon
+                const rect = img.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight + 200;
+                
+                if (isVisible || img.closest('.menu-item').style.display !== 'none') {
+                    imageObserver.observe(img);
+                }
+            });
+        } else {
+            // Fallback for browsers without IntersectionObserver
+            document.querySelectorAll('.lazy-load[data-src]').forEach(img => {
+                img.src = img.dataset.src;
+                img.classList.remove('lazy-load');
+            });
+        }
+    }
 
     function initializeMenu() {
         // Store all dishes for search functionality
@@ -294,13 +355,23 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
                 item.style.display = 'block';
                 item.style.opacity = '0';
                 item.style.transform = 'translateY(20px)';
-
+                
+                // Re-initialize lazy loading for visible items
+                setTimeout(() => {
+                    const lazyImages = item.querySelectorAll('.lazy-load[data-src]');
+                    if (imageObserver && lazyImages.length > 0) {
+                        lazyImages.forEach(img => {
+                            imageObserver.observe(img);
+                        });
+                    }
+                }, 100);
+                
                 setTimeout(() => {
                     item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
                     item.style.opacity = '1';
                     item.style.transform = 'translateY(0)';
                 }, 50 * visibleCount);
-
+                
                 visibleCount++;
             } else {
                 item.style.display = 'none';
@@ -334,18 +405,28 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
         menuItems.forEach((item, index) => {
             const itemCategory = item.dataset.category;
             const isVisible = categoryId === 'all' || itemCategory === categoryId.toString();
-
+            
             if (isVisible) {
                 item.style.display = 'block';
                 item.style.opacity = '0';
                 item.style.transform = 'translateY(20px)';
-
+                
+                // Re-initialize lazy loading for visible items
+                setTimeout(() => {
+                    const lazyImages = item.querySelectorAll('.lazy-load[data-src]');
+                    if (imageObserver && lazyImages.length > 0) {
+                        lazyImages.forEach(img => {
+                            imageObserver.observe(img);
+                        });
+                    }
+                }, 100);
+                
                 setTimeout(() => {
                     item.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
                     item.style.opacity = '1';
                     item.style.transform = 'translateY(0)';
                 }, 50 * visibleCount);
-
+                
                 visibleCount++;
             } else {
                 item.style.display = 'none';
@@ -800,7 +881,23 @@ $dishes = \App\Models\Dish::where('status', 1)->where('available', 1)->get();
         object-fit: cover;
         object-position: center center;
         display: block;
-        transition: transform 0.6s ease;
+        transition: transform 0.6s ease, opacity 0.3s ease;
+    }
+
+    .lazy-load {
+        opacity: 0.5;
+        background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: 200% 0;
+        }
+        100% {
+            background-position: -200% 0;
+        }
     }
 
     .premium-menu-card:hover .premium-card-img {
